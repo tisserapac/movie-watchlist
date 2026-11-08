@@ -1,7 +1,11 @@
-import MovieCard from './components/MovieCard';
+import { useState } from 'react';
+import MovieList from './components/MovieList';
+import initialMovies from './data/initialMovies';
 import './App.css';
 
 function App() {
+  const [movies, setMovies] = useState(initialMovies);
+
   return (
     <div className="app">
       <header className="app__header">
@@ -9,8 +13,9 @@ function App() {
         <p className="app__tagline">Keep track of the movies you want to watch.</p>
       </header>
 
-      <MovieCard title="Inception" year={2010} genre="Sci-Fi" watched={true} />
-      <MovieCard title="Parasite" year={2019} genre="Drama" watched={false} />
+      <p className="app__summary">Total movies: {movies.length}</p>
+
+      <MovieList movies={movies} />
     </div>
   );
 }

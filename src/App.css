@@ -16,3 +16,8 @@
 .app__tagline {
   color: var(--color-muted);
 }
+
+.app__summary {
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+}
