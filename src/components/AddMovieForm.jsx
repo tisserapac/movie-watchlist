@@ -2,28 +2,42 @@ import { useState } from 'react';
 import './AddMovieForm.css';
 
 const GENRES = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror'];
+const FIRST_FILM_YEAR = 1888;
+const LATEST_YEAR = new Date().getFullYear() + 5;
 
 function AddMovieForm({ onAdd }) {
   const [title, setTitle] = useState('');
   const [year, setYear] = useState('');
   const [genre, setGenre] = useState('Action');
+  const [error, setError] = useState('');
 
   function handleSubmit(e) {
     e.preventDefault(); // stop the page reload
 
+    if (title.trim() === '') {
+      setError('Please enter a movie title.');
+      return;
+    }
+    const yearNumber = Number(year);
+    if (!Number.isInteger(yearNumber) || yearNumber < FIRST_FILM_YEAR || yearNumber > LATEST_YEAR) {
+      setError(`Please enter a year between ${FIRST_FILM_YEAR} and ${LATEST_YEAR}.`);
+      return;
+    }
+
     const newMovie = {
       id: Date.now(),
-      title,
-      year: Number(year),
+      title: title.trim(),
+      year: yearNumber,
       genre,
       watched: false,
     };
     onAdd(newMovie);
 
-    // clear the inputs
+    // clear the inputs and the error
     setTitle('');
     setYear('');
     setGenre('Action');
+    setError('');
   }
 
   return (
@@ -67,6 +81,12 @@ function AddMovieForm({ onAdd }) {
       <button type="submit" className="add-form__submit">
         Add
       </button>
+
+      {error && (
+        <p className="add-form__error" role="alert">
+          {error}
+        </p>
+      )}
     </form>
   );
 }

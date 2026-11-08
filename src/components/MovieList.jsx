@@ -1,7 +1,11 @@
 import MovieCard from './MovieCard';
 import './MovieList.css';
 
-function MovieList({ movies, onToggle, onDelete }) {
+function MovieList({ movies, emptyMessage, onToggle, onDelete }) {
+  if (movies.length === 0) {
+    return <p className="movie-list__empty">{emptyMessage}</p>;
+  }
+
   return (
     <div className="movie-list">
       {movies.map((movie) => (

@@ -35,6 +35,15 @@
   background: var(--color-primary-hover);
 }
 
+.add-form__error {
+  grid-column: 1 / -1;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 0.9rem;
+}
+
 @media (max-width: 640px) {
   .add-form {
     grid-template-columns: 1fr 1fr;
