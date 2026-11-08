@@ -1,0 +1,48 @@
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.app__header {
+  margin-bottom: var(--space-5);
+}
+
+.app__header h1 {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.app__tagline {
+  color: var(--color-muted);
+}
+
+.app__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.app__summary {
+  font-weight: 600;
+}
+
+.app__footer {
+  margin-top: var(--space-6);
+  text-align: center;
+}
+
+.app__reset {
+  border: none;
+  background: none;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.app__reset:hover {
+  color: var(--color-text);
+}

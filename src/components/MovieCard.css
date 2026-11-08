@@ -1,0 +1,59 @@
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow);
+}
+
+.movie-card__title {
+  font-size: 1.1rem;
+  line-height: 1.3;
+}
+
+.movie-card__meta {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.movie-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.movie-card__actions button {
+  font-size: 0.85rem;
+}
+
+.movie-card__delete {
+  color: var(--color-danger);
+}
+
+.movie-card__delete:hover {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
+.badge {
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.badge.done {
+  background: var(--color-done-bg);
+  color: var(--color-done-text);
+}
+
+.badge.todo {
+  background: var(--color-todo-bg);
+  color: var(--color-todo-text);
+}

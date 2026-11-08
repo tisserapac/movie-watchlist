@@ -1,0 +1,106 @@
+/* Global styles: design tokens, base elements, light and dark theme.
+   Component styles live next to each component (MovieCard.css, ...)
+   and use only the var(--...) tokens defined here. */
+
+:root {
+  --color-bg: #f5f4ef;
+  --color-surface: #ffffff;
+  --color-text: #1f2328;
+  --color-muted: #5f6368;
+  --color-border: #dedbd2;
+  --color-primary: #3a5a2c;
+  --color-primary-hover: #2e4823;
+  --color-on-primary: #ffffff;
+  --color-done-bg: #e3f1dc;
+  --color-done-text: #2f5d1f;
+  --color-todo-bg: #fdf0d5;
+  --color-todo-text: #8a5a00;
+  --color-danger: #b42318;
+  --color-danger-bg: #fdecea;
+  --color-focus: #4c8bf5;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 2px 8px rgb(0 0 0 / 4%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #15171a;
+    --color-surface: #1f2226;
+    --color-text: #e8e6e3;
+    --color-muted: #a3a7ad;
+    --color-border: #34383e;
+    --color-primary: #8fbf6f;
+    --color-primary-hover: #a6d186;
+    --color-on-primary: #15171a;
+    --color-done-bg: #23361b;
+    --color-done-text: #b5dc9c;
+    --color-todo-bg: #3a2e14;
+    --color-todo-text: #f1c86b;
+    --color-danger: #f28b82;
+    --color-danger-bg: #3b1f1d;
+    --shadow: none;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+button:hover {
+  border-color: var(--color-muted);
+}
+
+input,
+select {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
