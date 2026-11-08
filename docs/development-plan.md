@@ -120,7 +120,7 @@ src/
     ├── MovieCard.jsx/.css   # title, year, genre, watched, onToggle, onDelete
     ├── AddMovieForm.jsx/.css# controlled title/year/genre, trim() validation, onAdd
     ├── FilterBar.jsx/.css   # All · To watch · Watched; filter, onFilterChange
-    └── MovieList.jsx        # movies, onToggle, onDelete; empty-state message; map + key
+    └── MovieList.jsx/.css   # movies, emptyMessage, onToggle, onDelete; map + key; card grid
 ```
 
 - `MovieCard` signature must match lecture slide 22 exactly:
