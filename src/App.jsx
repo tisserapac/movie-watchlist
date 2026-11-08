@@ -11,6 +11,18 @@ function App() {
     setMovies([...movies, newMovie]);
   }
 
+  function handleToggle(id) {
+    setMovies(movies.map((m) =>
+      m.id === id ? { ...m, watched: !m.watched } : m
+    ));
+  }
+
+  function handleDelete(id) {
+    setMovies(movies.filter((m) => m.id !== id));
+  }
+
+  const watchedCount = movies.filter((m) => m.watched).length;
+
   return (
     <div className="app">
       <header className="app__header">
@@ -20,9 +32,15 @@ function App() {
 
       <AddMovieForm onAdd={handleAdd} />
 
-      <p className="app__summary">Total movies: {movies.length}</p>
+      <p className="app__summary">
+        Total: {movies.length} · Watched: {watchedCount} / {movies.length}
+      </p>
 
-      <MovieList movies={movies} />
+      <MovieList
+        movies={movies}
+        onToggle={handleToggle}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

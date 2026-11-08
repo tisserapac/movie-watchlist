@@ -1,7 +1,7 @@
 import MovieCard from './MovieCard';
 import './MovieList.css';
 
-function MovieList({ movies }) {
+function MovieList({ movies, onToggle, onDelete }) {
   return (
     <div className="movie-list">
       {movies.map((movie) => (
@@ -11,6 +11,8 @@ function MovieList({ movies }) {
           year={movie.year}
           genre={movie.genre}
           watched={movie.watched}
+          onToggle={() => onToggle(movie.id)}
+          onDelete={() => onDelete(movie.id)}
         />
       ))}
     </div>

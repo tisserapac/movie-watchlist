@@ -20,6 +20,27 @@
   font-size: 0.9rem;
 }
 
+.movie-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.movie-card__actions button {
+  font-size: 0.85rem;
+}
+
+.movie-card__delete {
+  color: var(--color-danger);
+}
+
+.movie-card__delete:hover {
+  border-color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
+
 .badge {
   padding: 2px var(--space-2);
   border-radius: 999px;
