@@ -1,0 +1,18 @@
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.app__header {
+  margin-bottom: var(--space-5);
+}
+
+.app__header h1 {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.app__tagline {
+  color: var(--color-muted);
+}
