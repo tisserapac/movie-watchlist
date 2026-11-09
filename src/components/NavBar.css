@@ -1,0 +1,23 @@
+.nav-bar {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.nav-bar__link {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.nav-bar__link:hover {
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.nav-bar__link.active {
+  color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
