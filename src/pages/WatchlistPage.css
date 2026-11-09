@@ -12,8 +12,12 @@
 }
 
 .watchlist__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
   margin-top: var(--space-6);
-  text-align: center;
 }
 
 .watchlist__reset {
