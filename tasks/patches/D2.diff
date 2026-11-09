@@ -1,0 +1,43 @@
+diff --git a/src/context/MoviesProvider.jsx b/src/context/MoviesProvider.jsx
+index 605aa1f..611d87b 100644
+--- a/src/context/MoviesProvider.jsx
++++ b/src/context/MoviesProvider.jsx
+@@ -29,8 +29,12 @@ function MoviesProvider({ children }) {
+     setMovies(initialMovies);
+   }
+ 
++  function clearWatched() {
++    setMovies(movies.filter((m) => !m.watched));
++  }
++
+   return (
+-    <MoviesContext.Provider value={{ movies, addMovie, toggleMovie, deleteMovie, resetMovies }}>
++    <MoviesContext.Provider value={{ movies, addMovie, toggleMovie, deleteMovie, resetMovies, clearWatched }}>
+       {children}
+     </MoviesContext.Provider>
+   );
+diff --git a/src/pages/WatchlistPage.jsx b/src/pages/WatchlistPage.jsx
+index a0546e6..53367fb 100644
+--- a/src/pages/WatchlistPage.jsx
++++ b/src/pages/WatchlistPage.jsx
+@@ -6,7 +6,9 @@ import useMovies from '../hooks/useMovies';
+ import './WatchlistPage.css';
+ 
+ function WatchlistPage() {
+-  const { movies, watchedCount, addMovie, toggleMovie, deleteMovie, resetMovies } = useMovies();
++  const {
++    movies, watchedCount, addMovie, toggleMovie, deleteMovie, resetMovies, clearWatched,
++  } = useMovies();
+   const [filter, setFilter] = useState('all');
+ 
+   function handleReset() {
+@@ -42,6 +44,9 @@ function WatchlistPage() {
+       />
+ 
+       <div className="watchlist__footer">
++        <button type="button" onClick={clearWatched} disabled={watchedCount === 0}>
++          Clear watched
++        </button>
+         <button type="button" className="watchlist__reset" onClick={handleReset}>
+           Reset to sample movies
+         </button>
