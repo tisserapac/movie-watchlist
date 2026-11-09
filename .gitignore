@@ -1,3 +1,7 @@
+# Based on the .gitignore that `npm create vite@latest` generates.
+# A leading "/" matches only at the repository root: a bare name like
+# "context/" would also hide folders such as src/context/.
+
 # Logs
 logs
 *.log
@@ -7,9 +11,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
-dist
-dist-ssr
+
+# Build output and test coverage
+/dist
+/dist-ssr
+/coverage
+
+# Environment files (keep secrets out of git; .env.example may be committed)
+.env
+.env.*
+!.env.example
 *.local
 
 # Editor directories and files
@@ -17,14 +30,12 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# test coverage
-coverage
-
-# lecture materials (not part of the app)
-context/
+# Lecture materials (not part of the app)
+/context/

@@ -9,9 +9,9 @@ follow its *Deliverables (git tags)*.
 
 ## Current Status
 
-**Stage:** Stage 2 — `extended`
-**Last completed:** 08 Slide 63 checklist passed; tag `lab-solution`
-**Next:** 09 `useLocalStorage` custom hook
+**Stage:** Stage 3 — `demo`
+**Last completed:** 13 Same behaviour as `lab-solution` checked; tag `extended`
+**Next:** 14 Vitest + React Testing Library setup
 
 ---
 
@@ -30,11 +30,11 @@ follow its *Deliverables (git tags)*.
 
 ### Stage 2 — `extended` (lecture slide 17: custom hooks, context, routing)
 
-- [ ] 09 `useLocalStorage` custom hook (with try/catch fallback)
-- [ ] 10 `MoviesContext` + `MoviesProvider` (movies state, add / toggle / delete / reset)
-- [ ] 11 `useMovies` custom hook (consumes context, derived counts)
-- [ ] 12 React Router: `NavBar`, `WatchlistPage` (`/`), `StatsPage` (`/stats`)
-- [ ] 13 Same behaviour as `lab-solution` checked by hand; tag `extended`
+- [x] 09 `useLocalStorage` custom hook (with try/catch fallback)
+- [x] 10 `MoviesContext` + `MoviesProvider` (movies state, add / toggle / delete / reset); `WatchlistPage` split out of `App`
+- [x] 11 `useMovies` custom hook (consumes context, derived counts)
+- [x] 12 React Router: `NavBar`, `WatchlistPage` (`/`), `StatsPage` (`/stats`), `NotFoundPage` (`*`)
+- [x] 13 Same behaviour as `lab-solution` checked; tag `extended`
 
 ### Stage 3 — `demo` (tests, Stage 2 tasks, KG check, runbook)
 
@@ -65,6 +65,8 @@ follow its *Deliverables (git tags)*.
 - Plain CSS, no Tailwind: one `.css` per component, tokens as CSS variables in
   `index.css`, component-prefixed class names, `badge done` / `badge todo` kept from slide 58.
 - No file named `seed.*` (the `codebase-kg` extractor excludes that pattern).
+- `.gitignore` ignores the lecture materials with `/context/` (root only), never a bare
+  `context/`, which would also hide `src/context/`.
 - Linting is Oxlint (`npm run lint`, `.oxlintrc.json`): current create-vite templates ship
   Oxlint instead of ESLint. Not a JS/JSX file, so the extractor never sees it.
 - CSS tokens went into `index.css` in the scaffold commit (01), not in polish (07), so every
@@ -81,6 +83,25 @@ follow its *Deliverables (git tags)*.
   Hotel), all 5 genres covered. First-run summary: `Total: 8 · Watched: 3 / 8`.
 - Card grid `minmax(260px, 1fr)`: 3 columns at the 960px max width, so the two card buttons
   stay on one row; 1 column on phones.
+- Stage 2 is four working commits (items 09–12), each with lint, build and the browser
+  checks green, so `git log` shows the refactor one idea at a time.
+- `createContext` lives in `context/MoviesContext.js`, separate from
+  `context/MoviesProvider.jsx`: Oxlint's `react/only-export-components` warns when a `.jsx`
+  file exports a component and a non-component. It also gives the graph one clean Context
+  node. The plan's D1/D2 file paths now point to `MoviesProvider.jsx`.
+- `<MoviesContext.Provider value>`, as on lecture slide 17, rather than React 19's
+  `<MoviesContext value>`; the extraction prompts and the slide both use `.Provider`.
+- React Router 8 (`react-router`). v8 removed the `react-router-dom` package, so the planned
+  fallback to `react-router-dom` would mean pinning v7. Decide only if item 18 shows no
+  ROUTES_TO edges. v8 needs Node ≥ 22.22 (README updated).
+- `filter` state stays local to `WatchlistPage`. The Reset button moved there from the
+  `App` footer so it can still reset the filter to All.
+- `useMovies` returns the context plus `watchedCount`; `WatchlistPage` and `StatsPage` both use it.
+- Added beyond the plan: `NotFoundPage` (`*` route, with a Link home), `StatCard`
+  (`{ value, label }`, used 4× on the Stats page), and `data/genres.js` (GENRES shared by
+  `AddMovieForm` and `StatsPage`, instead of a second copy).
+- Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
+  "Progress" so there aren't two "Watched" labels.
 
 ---
 
@@ -98,5 +119,19 @@ follow its *Deliverables (git tags)*.
   stays empty after refresh, no-match filter message, Reset, no horizontal scroll at 390px,
   no console errors or key warnings. 24/24 passed. Light, dark and phone screenshots checked.
   A fresh `git clone` → `npm install` → `npm run build` works, and `context/` is not in the clone.
-- Item 12: check current React Router docs first (`react-router` vs `react-router-dom`);
-  confirm in item 18 that ROUTES_TO edges are extracted for the chosen import.
+- Stage 2 verification: lint and build clean on items 09–12. The headless Chrome script was
+  rebuilt (the scratchpad was cleared between sessions) and extended to 36 checks: the 24 core
+  checks, plus corrupt saved data falling back to the sample movies, NavBar active state on
+  both routes, client-side navigation to `/stats`, stat cards and the genre table reflecting
+  shared state after a toggle, browser Back, deep link to `/stats`, unknown URL showing
+  NotFoundPage and its link home, the stats page with 0 movies, and no horizontal scroll at
+  390px on both routes. 36/36 passed on the dev server and on the production build
+  (`vite preview`). Light, dark and phone screenshots checked.
+- Caught by the fresh-clone check: the `.gitignore` rule `context/` (for the lecture
+  materials) also matched `src/context/`, so `MoviesContext.js` and `MoviesProvider.jsx` were
+  never committed. The app built locally but not from a clone. Fixed by anchoring the rule
+  to `/context/`. The unpushed item 10 commit was amended to include both files and the
+  fix, so every commit builds. Each Stage 2 commit was then linted and built from a clean
+  clone, and the clone's production build passed 36/36. Lesson: always run the fresh-clone
+  check before tagging.
+- Item 18: confirm that ROUTES_TO edges are extracted for `import { Route } from 'react-router'`.

@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import GENRES from '../data/genres';
 import './AddMovieForm.css';
 
-const GENRES = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror'];
 const FIRST_FILM_YEAR = 1888;
 const LATEST_YEAR = new Date().getFullYear() + 5;
 
