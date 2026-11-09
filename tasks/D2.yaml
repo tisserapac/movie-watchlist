@@ -6,7 +6,7 @@
 task_id: D2
 project_id: movie-watchlist
 project_repo: https://github.com/tisserapac/movie-watchlist
-git_commit: afec4a525d6384117b89570015d5603d5e83d3ae
+git_commit: bfb727d984f7029e4f433bc270a0649ce84890f6
 task_type: feature_addition
 
 spec: >

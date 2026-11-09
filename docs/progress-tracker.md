@@ -122,7 +122,7 @@ follow its *Deliverables (git tags)*.
   (refactoring). `deleteMovie` filters by `id` again, as on `extended`. The D1 task test
   is now the regular test `src/__tests__/deleteMovie.test.jsx` (2 tests, same-title
   delete). D1's YAML and patch were removed, `verify.sh` no longer stacks D2/D3 on D1,
-  and both YAMLs point `git_commit` at the D1 removal commit. The bug_fix Cypher
+  and both YAMLs point `git_commit` at the D1 removal commit `bfb727d`. The bug_fix Cypher
   template is no longer exercised in the demo.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
@@ -166,7 +166,7 @@ follow its *Deliverables (git tags)*.
   checks still pass on the dev server.
 - 17b verification: lint 0, `npm test` 26/26. D2's patch was regenerated (its hunk moved up
   one line); D3's is unchanged. In a scratch clone with the base committed, `verify.sh`
-  gave 8/8 for D2 and D3.
+  gave 8/8 for D2 and D3, and again in this repo after the commits.
 - `develop` no longer carries a planted bug (17b), so it is safe to merge into `main`.
 - Item 18: register the project with `exclude_paths = ["tasks"]` to be safe, although the
   extractor already skips everything in it.
