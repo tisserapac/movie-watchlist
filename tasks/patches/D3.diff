@@ -1,0 +1,53 @@
+diff --git a/src/hooks/useMovieFilter.js b/src/hooks/useMovieFilter.js
+new file mode 100644
+index 0000000..242bf6c
+--- /dev/null
++++ b/src/hooks/useMovieFilter.js
+@@ -0,0 +1,16 @@
++import { useState } from 'react';
++
++// Keeps the current filter ('all', 'todo' or 'watched') and returns
++// the movies that match it.
++function useMovieFilter(movies) {
++  const [filter, setFilter] = useState('all');
++
++  // calculated, NOT stored in state
++  const visibleMovies = movies.filter(
++    (m) => filter === 'all' || (filter === 'watched') === m.watched
++  );
++
++  return { filter, setFilter, visibleMovies };
++}
++
++export default useMovieFilter;
+diff --git a/src/pages/WatchlistPage.jsx b/src/pages/WatchlistPage.jsx
+index a0546e6..86a76fc 100644
+--- a/src/pages/WatchlistPage.jsx
++++ b/src/pages/WatchlistPage.jsx
+@@ -1,24 +1,19 @@
+-import { useState } from 'react';
+ import AddMovieForm from '../components/AddMovieForm';
+ import FilterBar from '../components/FilterBar';
+ import MovieList from '../components/MovieList';
++import useMovieFilter from '../hooks/useMovieFilter';
+ import useMovies from '../hooks/useMovies';
+ import './WatchlistPage.css';
+ 
+ function WatchlistPage() {
+   const { movies, watchedCount, addMovie, toggleMovie, deleteMovie, resetMovies } = useMovies();
+-  const [filter, setFilter] = useState('all');
++  const { filter, setFilter, visibleMovies } = useMovieFilter(movies);
+ 
+   function handleReset() {
+     resetMovies();
+     setFilter('all');
+   }
+ 
+-  // calculated, NOT stored in state
+-  const visibleMovies = movies.filter(
+-    (m) => filter === 'all' || (filter === 'watched') === m.watched
+-  );
+-
+   const emptyMessage = movies.length === 0
+     ? 'Your watchlist is empty. Add a movie above.'
+     : 'No movies match this filter.';

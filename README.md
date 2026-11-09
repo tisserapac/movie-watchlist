@@ -9,7 +9,7 @@ project for the *Knowledge Graphs for React Code Generation* lecture demo.
 You need Node.js 22.22 or newer (the current LTS is fine) and npm.
 
 ```bash
-git clone <this repository>
+git clone https://github.com/tisserapac/movie-watchlist.git
 cd movie-watchlist
 npm install
 npm run dev
@@ -52,9 +52,11 @@ src/
 │   ├── MovieList.jsx           # one MovieCard per movie, empty-state message
 │   ├── MovieCard.jsx           # title, year, genre, badge, toggle and delete buttons
 │   └── StatCard.jsx            # one number with a label
-└── data/
-    ├── initialMovies.js        # the 8 sample movies
-    └── genres.js               # Action, Comedy, Drama, Sci-Fi, Horror
+├── data/
+│   ├── initialMovies.js        # the 8 sample movies
+│   └── genres.js               # Action, Comedy, Drama, Sci-Fi, Horror
+└── __tests__/                  # Vitest + React Testing Library tests
+tasks/                          # demo tasks D2 and D3: specs, tests, reference patches
 ```
 
 The movie list lives in `MoviesProvider` and is shared through React Context.
@@ -70,6 +72,8 @@ through functions (`onAdd`, `onToggle`, `onDelete`, `onFilterChange`).
 | `npm run build` | Build for production into `dist/` |
 | `npm run preview` | Serve the production build |
 | `npm run lint` | Check the code with Oxlint |
+| `npm test` | Run the tests once (Vitest + React Testing Library) |
+| `npm run test:watch` | Run the tests and re-run them on every change |
 
 ## Versions of this app (git tags)
 

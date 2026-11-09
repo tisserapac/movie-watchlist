@@ -1,0 +1,43 @@
+# Task D2 — Movie Watchlist feature: "Clear watched" button
+#
+# Exercises: feature_addition Cypher template (anchor + its context/hook neighbours)
+# Project:   movie-watchlist (React Router; context + custom hooks)
+
+task_id: D2
+project_id: movie-watchlist
+project_repo: https://github.com/tisserapac/movie-watchlist
+git_commit: bfb727d984f7029e4f433bc270a0649ce84890f6
+task_type: feature_addition
+
+spec: >
+  The watchlist has no way to remove all watched movies at once. Add a
+  `clearWatched` action to `MoviesProvider` that removes every watched movie
+  and keeps the rest, and make it available through the `useMovies` hook.
+  Then add a "Clear watched" button to the footer of `WatchlistPage` that
+  calls it. The button should be disabled when no movie is watched.
+
+expected_anchors:
+  anchor_names:
+    - WatchlistPage      # gets the button
+    - MoviesProvider     # gains clearWatched
+    - useMovies          # exposes it to components
+  anchor_routes:
+    - /                  # WatchlistPage's route
+
+reference_patch: patches/D2.diff
+
+# Run: npx vitest run src/__tests__/D2_clear_watched.test.jsx
+test_files:
+  - src/__tests__/D2_clear_watched.test.jsx
+
+files_modified:
+  - src/context/MoviesProvider.jsx
+  - src/pages/WatchlistPage.jsx
+
+# Notes:
+# - The test fails at git_commit (no button, no clearWatched) and passes with
+#   the reference patch.
+# - useMovies spreads the context value, so adding clearWatched to the
+#   provider's value is enough; editing useMovies.js is also valid.
+# - The button is found by its accessible name "Clear watched"; where exactly
+#   it sits on the page is not tested.

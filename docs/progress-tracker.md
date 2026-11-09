@@ -10,8 +10,8 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 13 Same behaviour as `lab-solution` checked; tag `extended`
-**Next:** 14 Vitest + React Testing Library setup
+**Last completed:** 17b D1 dropped: bug fixed in `src/`, demo tasks are D2 and D3 only
+**Next:** 18 Extraction with `codebase-kg` (**ask before editing `codebase-kg`**)
 
 ---
 
@@ -38,13 +38,14 @@ follow its *Deliverables (git tags)*.
 
 ### Stage 3 — `demo` (tests, Stage 2 tasks, KG check, runbook)
 
-- [ ] 14 Vitest + React Testing Library setup, `localStorage.clear()` per test, smoke tests
-- [ ] 15 D1 bug_fix task: planted bug, YAML, failing test, reference patch
-- [ ] 16 D2 feature_addition task: "Clear watched", YAML, test, reference patch
-- [ ] 17 D3 refactoring task: `useMovieFilter`, YAML, test, reference patch
+- [x] 14 Vitest + React Testing Library setup, `localStorage.clear()` per test, smoke tests
+- [x] 15 ~~D1 bug_fix task: planted bug, YAML, failing test, reference patch~~ (dropped in 17b)
+- [x] 16 D2 feature_addition task: "Clear watched", YAML, test, reference patch
+- [x] 17 D3 refactoring task: `useMovieFilter`, YAML, test, reference patch
+- [x] 17b Drop D1 to fit the 1-hour session: bug fixed in `src/`, D1 test kept as `src/__tests__/deleteMovie.test.jsx`, D2/D3 rebased
 - [ ] 18 Extraction with `codebase-kg` for `demo` and `lab-solution` (**ask before editing `codebase-kg`**)
 - [ ] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback)
-- [ ] 20 Retriever run on D1–D3: anchors and context blocks checked
+- [ ] 20 Retriever run on D2 and D3: anchors and context blocks checked
 - [ ] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
 - [ ] 22 Demo dry run; tag `demo`
 
@@ -54,7 +55,7 @@ follow its *Deliverables (git tags)*.
 
 - React + Vite, JavaScript (`.jsx`) only: no TypeScript, no Next.js or other framework.
 - Three git tags: `lab-solution` (exactly the lab), `extended` (custom hooks + context +
-  routing), `demo` (tests + tasks + planted D1 bug). One commit per lab task up to `lab-solution`.
+  routing), `demo` (tests + demo tasks D2 and D3). One commit per lab task up to `lab-solution`.
 - `MovieCard` signature matches lecture slide 22:
   `function MovieCard({ title, year, genre, watched, onToggle, onDelete })`, default export.
 - No backend or database: React state + `localStorage`, sample movies from
@@ -88,7 +89,7 @@ follow its *Deliverables (git tags)*.
 - `createContext` lives in `context/MoviesContext.js`, separate from
   `context/MoviesProvider.jsx`: Oxlint's `react/only-export-components` warns when a `.jsx`
   file exports a component and a non-component. It also gives the graph one clean Context
-  node. The plan's D1/D2 file paths now point to `MoviesProvider.jsx`.
+  node. The plan's D2 file paths now point to `MoviesProvider.jsx`.
 - `<MoviesContext.Provider value>`, as on lecture slide 17, rather than React 19's
   `<MoviesContext value>`; the extraction prompts and the slide both use `.Provider`.
 - React Router 8 (`react-router`). v8 removed the `react-router-dom` package, so the planned
@@ -100,6 +101,29 @@ follow its *Deliverables (git tags)*.
 - Added beyond the plan: `NotFoundPage` (`*` route, with a Link home), `StatCard`
   (`{ value, label }`, used 4× on the Stats page), and `data/genres.js` (GENRES shared by
   `AddMovieForm` and `StatsPage`, instead of a second copy).
+- Tests: Vitest 5 config lives in `vite.config.js`, with `include: ['src/**/*.test.{js,jsx}']`
+  so `tasks/tests/` (failing on purpose) is never part of `npm test`. Setup and helpers are
+  in `src/__tests__/` (`setup.js`, `helpers.jsx`), which the extractor ignores. Names
+  avoid `*.setup.*` and `setupTests.*` anyway. RTL `cleanup` is called in the setup file
+  because globals are off.
+- Task files follow the codebase-kg pilot format: `tasks/D*.yaml`, `tasks/tests/`,
+  `tasks/patches/`. `test_files` is the destination under `src/__tests__/`, so a copied-in
+  test can import `./helpers`.
+- Task tests check behaviour (the UI, plus the hook API where the spec names it), so any
+  correct solution passes. D3's spec fixes the hook's name, path and return shape because
+  the test imports it.
+- The footer is a flex row with gap (commit `afec4a5`), so D2's reference patch needs no CSS.
+- D2 and D3 are independent: each applies on the base, but not on top of each other
+  (both edit the top of WatchlistPage).
+- Added beyond the plan: `tasks/verify.sh` (re-checks every task in a throwaway
+  worktree) and `tasks/README.md`.
+- D1 dropped (2026-11-09, item 17b): an hour of hands-on time also has to cover students
+  cloning and setting up the repos, so the demo keeps only D2 (feature_addition) and D3
+  (refactoring). `deleteMovie` filters by `id` again, as on `extended`. The D1 task test
+  is now the regular test `src/__tests__/deleteMovie.test.jsx` (2 tests, same-title
+  delete). D1's YAML and patch were removed, `verify.sh` no longer stacks D2/D3 on D1,
+  and both YAMLs point `git_commit` at the D1 removal commit `bfb727d`. The bug_fix Cypher
+  template is no longer exercised in the demo.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 
@@ -134,4 +158,16 @@ follow its *Deliverables (git tags)*.
   fix, so every commit builds. Each Stage 2 commit was then linted and built from a clean
   clone, and the clone's production build passed 36/36. Lesson: always run the fresh-clone
   check before tagging.
+- Phase 3 verification: `npm test` is 24/24 (and a mutation check, breaking `deleteMovie`,
+  makes exactly the 4 delete-related tests fail). `bash tasks/verify.sh` gives 20/20: for D1,
+  D2 and D3, and D2 and D3 on top of D1, the test fails before, the patch applies, and the
+  task test and whole suite pass after. Each task test was also seen failing for the
+  intended reason. Fresh clone: lint 0, build OK, 24/24, verify.sh all pass. The 36 browser
+  checks still pass on the dev server.
+- 17b verification: lint 0, `npm test` 26/26. D2's patch was regenerated (its hunk moved up
+  one line); D3's is unchanged. In a scratch clone with the base committed, `verify.sh`
+  gave 8/8 for D2 and D3, and again in this repo after the commits.
+- `develop` no longer carries a planted bug (17b), so it is safe to merge into `main`.
+- Item 18: register the project with `exclude_paths = ["tasks"]` to be safe, although the
+  extractor already skips everything in it.
 - Item 18: confirm that ROUTES_TO edges are extracted for `import { Route } from 'react-router'`.
