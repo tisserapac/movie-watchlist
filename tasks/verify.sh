@@ -3,7 +3,6 @@
 #   1. at the task's git_commit, the task test FAILS;
 #   2. the reference patch applies cleanly;
 #   3. with the patch, the task test and the whole suite (npm test) PASS.
-# D2 and D3 are also checked on top of the D1 fix.
 #
 # Usage (from the repository root, after npm install):  bash tasks/verify.sh
 set -uo pipefail
@@ -41,8 +40,8 @@ run_task_test() {  # run_task_test <dest>   (inside the worktree)
   (cd "$WORK/wt" && npx vitest run "$1" >/dev/null 2>&1)
 }
 
-check_task() {  # check_task <yaml> [<yaml of a patch to apply first>]
-  local yaml="$1" pre="${2:-}"
+check_task() {  # check_task <yaml>
+  local yaml="$1"
   local id commit patch src dest label
   id="$(field "$yaml" task_id)"
   commit="$(field "$yaml" git_commit)"
@@ -52,10 +51,6 @@ check_task() {  # check_task <yaml> [<yaml of a patch to apply first>]
   label="$id"
 
   fresh_worktree "$commit"
-  if [ -n "$pre" ]; then
-    label="$id (on top of $(field "$pre" task_id))"
-    git -C "$WORK/wt" apply "$ROOT/tasks/$(field "$pre" reference_patch)"
-  fi
   cp "$src" "$WORK/wt/$dest"
 
   echo "$label — $(field "$yaml" task_type)"
@@ -68,9 +63,6 @@ check_task() {  # check_task <yaml> [<yaml of a patch to apply first>]
 
 for yaml in tasks/D*.yaml; do
   check_task "$yaml"
-done
-for yaml in tasks/D2.yaml tasks/D3.yaml; do
-  [ -f "$yaml" ] && check_task "$yaml" tasks/D1.yaml
 done
 
 echo

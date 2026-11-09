@@ -35,7 +35,7 @@ files_modified:
 
 # Notes:
 # - The test fails at git_commit (the hook module does not exist) and passes
-#   with the reference patch, with or without the D1 fix applied.
+#   with the reference patch.
 # - The hook's name, path and return shape are part of the spec, because the
 #   test imports it; the filter expression inside it is free.
 # - In the graph this adds a Custom_Hook node and a WatchlistPage

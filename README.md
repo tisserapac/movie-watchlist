@@ -28,11 +28,6 @@ Open http://localhost:5173. The app starts with 8 sample movies.
 
 There is no backend or database: all data lives in the browser.
 
-> **Note for the lecture demo.** The latest version on `develop` contains one
-> deliberate bug, for demo task D1: deleting a movie also deletes other movies
-> with the same title. See [tasks/](tasks/README.md). The `extended` tag has the
-> same app without the bug.
-
 ## Project structure
 
 ```
@@ -61,7 +56,7 @@ src/
 │   ├── initialMovies.js        # the 8 sample movies
 │   └── genres.js               # Action, Comedy, Drama, Sci-Fi, Horror
 └── __tests__/                  # Vitest + React Testing Library tests
-tasks/                          # demo tasks D1-D3: specs, tests, reference patches
+tasks/                          # demo tasks D2 and D3: specs, tests, reference patches
 ```
 
 The movie list lives in `MoviesProvider` and is shared through React Context.

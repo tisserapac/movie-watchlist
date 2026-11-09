@@ -1,17 +1,21 @@
 # Demo tasks
 
-Three code-generation tasks for the live demo of *Knowledge Graphs for React
+Two code-generation tasks for the live demo of *Knowledge Graphs for React
 Code Generation* (Stage 2: generating code with the graph). They use the same
 format as the pilot tasks in `codebase-kg` (`tasks/pilot/P*.yaml`).
 
 | Task | Type | In one line | Anchors |
 | --- | --- | --- | --- |
-| [D1](D1.yaml) | bug_fix | Deleting a movie also deletes other movies with the same title | `MoviesProvider` |
 | [D2](D2.yaml) | feature_addition | Add a "Clear watched" button | `WatchlistPage`, `MoviesProvider`, `useMovies` |
 | [D3](D3.yaml) | refactoring | Move the filter logic into a `useMovieFilter` hook | `WatchlistPage` |
 
-The D1 bug is **planted on purpose** in this version of the app (commit
-`30f2bb6`). The `extended` tag has the correct code.
+The two tasks are independent: each applies on the base commit (`git_commit`),
+but not on top of the other, because both edit the top of `WatchlistPage`.
+
+There is no D1 any more. A bug-fix task (deleting a movie also deleted other
+movies with the same title) was dropped to fit the 1-hour hands-on session. The
+bug is fixed in `src/`, and its test is now a regular test,
+`src/__tests__/deleteMovie.test.jsx`.
 
 ## Files
 
@@ -29,11 +33,11 @@ accident. The `codebase-kg` extractor ignores this folder's contents:
 ## Try a task by hand
 
 ```bash
-cp tasks/tests/D1_delete_only_selected_movie.test.jsx src/__tests__/
-npx vitest run src/__tests__/D1_delete_only_selected_movie.test.jsx   # fails
-git apply tasks/patches/D1.diff
-npx vitest run src/__tests__/D1_delete_only_selected_movie.test.jsx   # passes
-git checkout -- src && rm src/__tests__/D1_delete_only_selected_movie.test.jsx   # undo
+cp tasks/tests/D2_clear_watched.test.jsx src/__tests__/
+npx vitest run src/__tests__/D2_clear_watched.test.jsx   # fails
+git apply tasks/patches/D2.diff
+npx vitest run src/__tests__/D2_clear_watched.test.jsx   # passes
+git checkout -- src && rm src/__tests__/D2_clear_watched.test.jsx   # undo
 ```
 
 ## Check every task

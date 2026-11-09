@@ -36,7 +36,7 @@ files_modified:
 
 # Notes:
 # - The test fails at git_commit (no button, no clearWatched) and passes with
-#   the reference patch, with or without the D1 fix applied.
+#   the reference patch.
 # - useMovies spreads the context value, so adding clearWatched to the
 #   provider's value is enough; editing useMovies.js is also valid.
 # - The button is found by its accessible name "Clear watched"; where exactly

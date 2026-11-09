@@ -43,9 +43,9 @@ npm test         # Vitest, src/**/*.test.{js,jsx} only (tasks/tests/ fail on pur
   extractor skips it). Tests go in `__tests__/` or `*.test.jsx`.
 - Ask before changing anything in the `codebase-kg` repository.
 - `context/` holds the lecture materials (git-ignored); it is not part of the app.
-- **The D1 bug is intentional.** `deleteMovie` in `src/context/MoviesProvider.jsx`
-  removes movies by title, for demo task D1. Do not fix it in `src/`. The fix is
-  `tasks/patches/D1.diff`. See [tasks/README.md](tasks/README.md).
+- The demo tasks are D2 (feature) and D3 (refactor) in `tasks/`; see
+  [tasks/README.md](tasks/README.md). There is no D1: the bug-fix task was
+  dropped to fit the 1-hour session, and `src/` has no planted bug.
 - After changing anything under `src/` or `tasks/`, run `npm test` and
   `bash tasks/verify.sh`. If the base code changes, update `git_commit` in
   `tasks/D*.yaml` and regenerate the patches.

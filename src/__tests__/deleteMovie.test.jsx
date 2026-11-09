@@ -1,5 +1,5 @@
-// Task D1 (bug_fix). Copied to src/__tests__/ before the candidate edit is applied.
-// Tests behaviour through the UI, so any correct fix passes.
+// deleteMovie removes movies by id, so two movies with the same title
+// (a film and its remake) are deleted one at a time.
 import { describe, expect, test } from 'vitest';
 import { cardButton, getCard, movieTitles, renderApp, savedMovies, summaryText } from './helpers';
 
@@ -9,7 +9,7 @@ const twoHeats = [
   { id: 3, title: 'Coco', year: 2017, genre: 'Comedy', watched: false },
 ];
 
-describe('D1: deleting a movie removes only that movie', () => {
+describe('deleting a movie removes only that movie', () => {
   test('deleting one of two movies with the same title keeps the other', async () => {
     const { user } = renderApp({ movies: twoHeats });
     const cards = document.querySelectorAll('.movie-card');

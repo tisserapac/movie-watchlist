@@ -1,8 +1,8 @@
 diff --git a/src/context/MoviesProvider.jsx b/src/context/MoviesProvider.jsx
-index 605aa1f..611d87b 100644
+index 49ec1fb..4cf2949 100644
 --- a/src/context/MoviesProvider.jsx
 +++ b/src/context/MoviesProvider.jsx
-@@ -29,8 +29,12 @@ function MoviesProvider({ children }) {
+@@ -28,8 +28,12 @@ function MoviesProvider({ children }) {
      setMovies(initialMovies);
    }
  

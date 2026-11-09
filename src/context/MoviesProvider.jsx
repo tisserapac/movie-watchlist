@@ -21,8 +21,7 @@ function MoviesProvider({ children }) {
   }
 
   function deleteMovie(id) {
-    const movieToDelete = movies.find((m) => m.id === id);
-    setMovies(movies.filter((m) => m.title !== movieToDelete.title));
+    setMovies(movies.filter((m) => m.id !== id));
   }
 
   function resetMovies() {
