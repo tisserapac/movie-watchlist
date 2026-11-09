@@ -9,7 +9,7 @@ project for the *Knowledge Graphs for React Code Generation* lecture demo.
 You need Node.js 22.22 or newer (the current LTS is fine) and npm.
 
 ```bash
-git clone <this repository>
+git clone https://github.com/tisserapac/movie-watchlist.git
 cd movie-watchlist
 npm install
 npm run dev
