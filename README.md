@@ -70,6 +70,8 @@ through functions (`onAdd`, `onToggle`, `onDelete`, `onFilterChange`).
 | `npm run build` | Build for production into `dist/` |
 | `npm run preview` | Serve the production build |
 | `npm run lint` | Check the code with Oxlint |
+| `npm test` | Run the tests once (Vitest + React Testing Library) |
+| `npm run test:watch` | Run the tests and re-run them on every change |
 
 ## Versions of this app (git tags)
 

@@ -30,6 +30,7 @@ Students clone this repo, so the code mirrors the idioms of the lecture slides.
 npm run dev      # dev server on http://localhost:5173
 npm run build    # production build into dist/
 npm run lint     # Oxlint
+npm test         # Vitest, src/**/*.test.{js,jsx} only (tasks/tests/ fail on purpose)
 ```
 
 ## Working rules
