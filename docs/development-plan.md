@@ -152,30 +152,40 @@ Same UI, restructured the way real projects are (like the shopping-cart example)
 
 ```
 src/
-├── App.jsx                       # <BrowserRouter><MoviesProvider><NavBar/><Routes>…
-├── context/MoviesContext.jsx     # createContext + MoviesProvider (movies state, add/toggle/delete)
+├── App.jsx                       # <BrowserRouter><MoviesProvider> header + <NavBar/> + <Routes>
+├── context/
+│   ├── MoviesContext.js          # createContext(null), its own file (Oxlint fast-refresh rule)
+│   └── MoviesProvider.jsx        # movies via useLocalStorage; add / toggle / delete / reset; <MoviesContext.Provider>
 ├── hooks/
-│   ├── useLocalStorage.js        # generic [value, setValue] persisted hook
+│   ├── useLocalStorage.js        # [value, setValue] persisted; try/catch fallback
 │   └── useMovies.js              # useContext(MoviesContext) + derived watchedCount; throws outside provider
 ├── pages/
-│   ├── WatchlistPage.jsx         # AddMovieForm, FilterBar, MovieList; filter state is local here
-│   └── StatsPage.jsx/.css        # watched %, count per genre
-└── components/
-    ├── NavBar.jsx/.css           # NavLink to / and /stats
-    └── (MovieCard, AddMovieForm, FilterBar, MovieList unchanged)
+│   ├── WatchlistPage.jsx/.css    # AddMovieForm, FilterBar, MovieList, Reset; filter state is local here
+│   ├── StatsPage.jsx/.css        # StatCard ×4, progress bar, per-genre table
+│   └── NotFoundPage.jsx/.css     # any other URL, Link back home
+├── components/
+│   ├── NavBar.jsx/.css           # NavLink to / (end) and /stats
+│   ├── StatCard.jsx/.css         # { value, label }
+│   └── (MovieCard, FilterBar, MovieList unchanged; AddMovieForm imports GENRES)
+└── data/
+    ├── initialMovies.js
+    └── genres.js                 # GENRES, shared by AddMovieForm and StatsPage
 ```
 
-- Routes: `/` → `WatchlistPage`, `/stats` → `StatsPage`.
+- Routes: `/` → `WatchlistPage`, `/stats` → `StatsPage`, `*` → `NotFoundPage`.
+- Router: `react-router` 8. v8 removed `react-router-dom`, so `BrowserRouter`,
+  `Routes`, `Route`, `NavLink` and `Link` are imported from `react-router`
+  (checked against the React Router docs). The pipeline's CATEGORY_MAP already
+  lists `react-router`, and the route prompt matches the `<Route path element>`
+  JSX whatever the import. Confirm in Phase 4 that ROUTES_TO edges are produced.
+  v8 needs Node ≥ 22.22.
 - Hook chain `MoviesProvider → useLocalStorage → useState/useEffect`, and
   `useMovies → useContext`. That is the same shape as `useCart → useCartProducts`
   on lecture slides 13/17.
 - The lecture's slide 24 query now runs on the students' own app:
   `MATCH (h)-[:CONSUMES_CONTEXT]->(c:Context) RETURN h.name, c.name` → `useMovies | MoviesContext`.
-- Before writing router code, check the current React Router docs (declarative
-  mode, package name `react-router` vs `react-router-dom`). Confirm in Phase 4
-  that the route prompt still produces ROUTES_TO for that import. If it doesn't,
-  fall back to `react-router-dom`, which the pipeline's CATEGORY_MAP and prompt
-  name explicitly.
+- The context is provided with `<MoviesContext.Provider value>`, as on lecture
+  slide 17, not React 19's shorter `<MoviesContext value>`.
 
 KG coverage adds Custom_Hook, Context · USES_CUSTOM_HOOK, PROVIDED_BY,
 PROVIDES_CONTEXT, CONSUMES_CONTEXT, ROUTES_TO, DEPENDS_ON(react-router).
@@ -196,8 +206,8 @@ Cypher template family:
 
 | ID | Type | Spec (short) | Expected anchors | Files the fix touches |
 | --- | --- | --- | --- | --- |
-| D1 | bug_fix | Deleting a movie also deletes every other movie with the same title (planted: `deleteMovie` filters by `title` instead of `id`) | `MoviesProvider`, `useMovies` | `context/MoviesContext.jsx` |
-| D2 | feature_addition | Add a "Clear watched" button on the Watchlist page that removes all watched movies | `WatchlistPage`, `useMovies` | `MoviesContext.jsx`, `WatchlistPage.jsx` |
+| D1 | bug_fix | Deleting a movie also deletes every other movie with the same title (planted: `deleteMovie` filters by `title` instead of `id`) | `MoviesProvider`, `useMovies` | `context/MoviesProvider.jsx` |
+| D2 | feature_addition | Add a "Clear watched" button on the Watchlist page that removes all watched movies | `WatchlistPage`, `useMovies` | `context/MoviesProvider.jsx`, `pages/WatchlistPage.jsx` |
 | D3 | refactoring | Move the filter logic out of `WatchlistPage` into a `useMovieFilter` custom hook | `WatchlistPage` | new `hooks/useMovieFilter.js`, `WatchlistPage.jsx` |
 
 - Each task has a test written before its reference patch. The test fails at
