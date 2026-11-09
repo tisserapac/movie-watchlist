@@ -1,0 +1,42 @@
+# Task D1 — Movie Watchlist bug-fix: deleting a movie removes others with the same title
+#
+# Exercises: bug_fix Cypher template (anchor-scoped: state, hooks, event handlers)
+# Project:   movie-watchlist (React Router; context + custom hooks)
+# Planted on purpose for the lecture demo (commit 30f2bb6); the `extended` tag is correct.
+
+task_id: D1
+project_id: movie-watchlist
+project_repo: https://github.com/tisserapac/movie-watchlist
+git_commit: afec4a525d6384117b89570015d5603d5e83d3ae
+task_type: bug_fix
+
+spec: >
+  When two movies in the watchlist have the same title (for example a film
+  and its remake), clicking Delete on one of them removes both. The
+  `deleteMovie` action in `MoviesProvider` should remove only the movie that
+  was clicked, identified by its id, and leave every other movie in the list,
+  including ones with the same title.
+
+# Anchor components the classifier should extract from the spec.
+# Documentation only (as in codebase-kg tasks/pilot).
+expected_anchors:
+  anchor_names:
+    - MoviesProvider     # defines deleteMovie
+  anchor_routes: []
+
+reference_patch: patches/D1.diff
+
+# Copied from tasks/tests/ to this path before the candidate edit is applied.
+# Run: npx vitest run src/__tests__/D1_delete_only_selected_movie.test.jsx
+test_files:
+  - src/__tests__/D1_delete_only_selected_movie.test.jsx
+
+files_modified:
+  - src/context/MoviesProvider.jsx
+
+# Notes:
+# - The test fails at git_commit and passes with the reference patch.
+# - Valid alternatives: filter by id (reference), or splice a copy at the
+#   clicked movie's index. Any fix that keeps same-titled movies passes.
+# - The sample movies have unique titles, so the bug is invisible until two
+#   movies share a title; the smoke tests in src/__tests__/ pass with the bug.
