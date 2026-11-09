@@ -27,4 +27,4 @@ dist-ssr
 coverage
 
 # lecture materials (not part of the app)
-context/
+/context/
