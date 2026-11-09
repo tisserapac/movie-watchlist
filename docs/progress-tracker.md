@@ -10,8 +10,8 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 13 Same behaviour as `lab-solution` checked; tag `extended`
-**Next:** 14 Vitest + React Testing Library setup
+**Last completed:** 17 D3 refactoring task (Phase 3 of the plan is complete)
+**Next:** 18 Extraction with `codebase-kg` (**ask before editing `codebase-kg`**)
 
 ---
 
@@ -38,10 +38,10 @@ follow its *Deliverables (git tags)*.
 
 ### Stage 3 — `demo` (tests, Stage 2 tasks, KG check, runbook)
 
-- [ ] 14 Vitest + React Testing Library setup, `localStorage.clear()` per test, smoke tests
-- [ ] 15 D1 bug_fix task: planted bug, YAML, failing test, reference patch
-- [ ] 16 D2 feature_addition task: "Clear watched", YAML, test, reference patch
-- [ ] 17 D3 refactoring task: `useMovieFilter`, YAML, test, reference patch
+- [x] 14 Vitest + React Testing Library setup, `localStorage.clear()` per test, smoke tests
+- [x] 15 D1 bug_fix task: planted bug, YAML, failing test, reference patch
+- [x] 16 D2 feature_addition task: "Clear watched", YAML, test, reference patch
+- [x] 17 D3 refactoring task: `useMovieFilter`, YAML, test, reference patch
 - [ ] 18 Extraction with `codebase-kg` for `demo` and `lab-solution` (**ask before editing `codebase-kg`**)
 - [ ] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback)
 - [ ] 20 Retriever run on D1–D3: anchors and context blocks checked
@@ -100,6 +100,24 @@ follow its *Deliverables (git tags)*.
 - Added beyond the plan: `NotFoundPage` (`*` route, with a Link home), `StatCard`
   (`{ value, label }`, used 4× on the Stats page), and `data/genres.js` (GENRES shared by
   `AddMovieForm` and `StatsPage`, instead of a second copy).
+- Tests: Vitest 5 config lives in `vite.config.js`, with `include: ['src/**/*.test.{js,jsx}']`
+  so `tasks/tests/` (failing on purpose) is never part of `npm test`. Setup and helpers are
+  in `src/__tests__/` (`setup.js`, `helpers.jsx`), which the extractor ignores. Names
+  avoid `*.setup.*` and `setupTests.*` anyway. RTL `cleanup` is called in the setup file
+  because globals are off.
+- Task files follow the codebase-kg pilot format: `tasks/D*.yaml`, `tasks/tests/`,
+  `tasks/patches/`. `test_files` is the destination under `src/__tests__/`, so a copied-in
+  test can import `./helpers`.
+- Task tests check behaviour (the UI, plus the hook API where the spec names it), so any
+  correct solution passes. D3's spec fixes the hook's name, path and return shape because
+  the test imports it.
+- Base commit `afec4a5`: the planted bug commit `30f2bb6`, then a neutral footer change
+  (flex row with gap) so D2's reference patch needs no CSS. The bug has no hinting comment,
+  because the extractor and the LLM read the code.
+- D2 and D3 are independent: each applies on the base, with or without D1, but not on
+  top of each other (both edit the top of WatchlistPage).
+- Added beyond the plan: `tasks/verify.sh` (re-checks every task in a throwaway
+  worktree) and `tasks/README.md`. CLAUDE.md now warns that the D1 bug is intentional.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 
@@ -134,4 +152,15 @@ follow its *Deliverables (git tags)*.
   fix, so every commit builds. Each Stage 2 commit was then linted and built from a clean
   clone, and the clone's production build passed 36/36. Lesson: always run the fresh-clone
   check before tagging.
+- Phase 3 verification: `npm test` is 24/24 (and a mutation check, breaking `deleteMovie`,
+  makes exactly the 4 delete-related tests fail). `bash tasks/verify.sh` gives 20/20: for D1,
+  D2 and D3, and D2 and D3 on top of D1, the test fails before, the patch applies, and the
+  task test and whole suite pass after. Each task test was also seen failing for the
+  intended reason. Fresh clone: lint 0, build OK, 24/24, verify.sh all pass. The 36 browser
+  checks still pass on the dev server.
+- `develop` now carries the planted bug. If it is merged into `main`, students cloning
+  `main` get the bug too. The README says so and points to the `extended` tag for the
+  bug-free app.
+- Item 18: register the project with `exclude_paths = ["tasks"]` to be safe, although the
+  extractor already skips everything in it.
 - Item 18: confirm that ROUTES_TO edges are extracted for `import { Route } from 'react-router'`.

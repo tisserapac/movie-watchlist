@@ -193,11 +193,15 @@ That is 10 of 11 node types; Class_Component is deliberately absent.
 
 ## Phase 3 — `demo`: tests and Stage 2 tasks
 
-**Test setup:** Vitest + jsdom + React Testing Library + user-event +
+**Test setup:** Vitest 5 + jsdom + React Testing Library + user-event +
 jest-dom. Config goes in `vite.config.js`, tests in `src/__tests__/`, so the
-extractor ignores both. The setup file runs `localStorage.clear()` in
-`beforeEach`, so every test starts from `initialMovies`. Baseline smoke tests
-cover add, toggle, delete, filter, validation, reset and the stats page.
+extractor ignores both. `test.include` is `src/**/*.test.{js,jsx}`, so the task
+tests in `tasks/tests/` (which fail until patched) never run with `npm test`.
+`src/__tests__/setup.js` runs `localStorage.clear()` and returns to `/` before
+each test, so every test starts from `initialMovies`. `helpers.jsx` provides
+`renderApp`, `addMovie` and similar helpers, shared with the task tests. 24 smoke
+tests cover add, validation, toggle, delete, filters, persistence, reset, the
+Stats page, routing and the two hooks.
 
 **Demo tasks:** in `tasks/`, in the same YAML shape as
 `codebase-kg/tasks/pilot/P*.yaml`, with `project_id: movie-watchlist`, `spec`,
@@ -210,11 +214,16 @@ Cypher template family:
 | D2 | feature_addition | Add a "Clear watched" button on the Watchlist page that removes all watched movies | `WatchlistPage`, `useMovies` | `context/MoviesProvider.jsx`, `pages/WatchlistPage.jsx` |
 | D3 | refactoring | Move the filter logic out of `WatchlistPage` into a `useMovieFilter` custom hook | `WatchlistPage` | new `hooks/useMovieFilter.js`, `WatchlistPage.jsx` |
 
-- Each task has a test written before its reference patch. The test fails at
-  `demo` and passes with the patch. Patches go in `tasks/patches/`, tests in
+- Each task has a test written before its reference patch. The test fails at the
+  base commit and passes with the patch. Patches go in `tasks/patches/`, tests in
   `tasks/tests/`, and are copied in at demo time as the harness does.
-- The D1 bug is committed on `demo` only; `extended` stays correct.
-- D2 and D3 must apply cleanly on top of `demo`, with or without D1.
+- Base commit (`git_commit` in every YAML): `afec4a5` = `extended` + test setup +
+  planted D1 bug (`30f2bb6`) + footer as a flex row (so D2's button needs no CSS).
+- The D1 bug is committed after `extended`; `extended` stays correct.
+- D2 and D3 each apply cleanly on the base commit, with or without D1. They are
+  independent tasks, not meant to be applied together.
+- `tasks/verify.sh` checks all of this in a throwaway git worktree.
+  `tasks/README.md` explains the folder.
 
 ## Phase 4 — Check it against `codebase-kg`
 
