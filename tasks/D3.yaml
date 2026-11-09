@@ -1,0 +1,42 @@
+# Task D3 — Movie Watchlist refactor: extract a useMovieFilter custom hook
+#
+# Exercises: refactoring Cypher template (anchor + the components that use it)
+# Project:   movie-watchlist (React Router; context + custom hooks)
+
+task_id: D3
+project_id: movie-watchlist
+project_repo: https://github.com/tisserapac/movie-watchlist
+git_commit: afec4a525d6384117b89570015d5603d5e83d3ae
+task_type: refactoring
+
+spec: >
+  `WatchlistPage` keeps the filter state and calculates the visible movies
+  itself. Move that logic into a new custom hook, `useMovieFilter(movies)`, in
+  `src/hooks/useMovieFilter.js` (default export). It should keep the current
+  filter ('all', 'todo' or 'watched', starting at 'all') and return
+  `{ filter, setFilter, visibleMovies }`. `WatchlistPage` should use the hook
+  instead, and the page must behave exactly as before, including Reset
+  returning the filter to All.
+
+expected_anchors:
+  anchor_names:
+    - WatchlistPage      # where the filter logic lives today
+  anchor_routes: []
+
+reference_patch: patches/D3.diff
+
+# Run: npx vitest run src/__tests__/D3_use_movie_filter.test.jsx
+test_files:
+  - src/__tests__/D3_use_movie_filter.test.jsx
+
+files_modified:
+  - src/hooks/useMovieFilter.js       # new file
+  - src/pages/WatchlistPage.jsx
+
+# Notes:
+# - The test fails at git_commit (the hook module does not exist) and passes
+#   with the reference patch, with or without the D1 fix applied.
+# - The hook's name, path and return shape are part of the spec, because the
+#   test imports it; the filter expression inside it is free.
+# - In the graph this adds a Custom_Hook node and a WatchlistPage
+#   USES_CUSTOM_HOOK useMovieFilter edge.
