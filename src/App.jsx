@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AddMovieForm from './components/AddMovieForm';
 import FilterBar from './components/FilterBar';
 import MovieList from './components/MovieList';
 import initialMovies from './data/initialMovies';
+import useLocalStorage from './hooks/useLocalStorage';
 import './App.css';
 
 // A key unique to this app, so another app on localhost:5173
@@ -10,17 +11,9 @@ import './App.css';
 const STORAGE_KEY = 'movie-watchlist:movies';
 
 function App() {
-  // load once, when the app starts; the sample movies are used
-  // only when nothing has been saved yet
-  const [movies, setMovies] = useState(() =>
-    JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? initialMovies
-  );
+  // the sample movies are used only when nothing has been saved yet
+  const [movies, setMovies] = useLocalStorage(STORAGE_KEY, initialMovies);
   const [filter, setFilter] = useState('all');
-
-  // save whenever movies changes
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
-  }, [movies]);
 
   function handleAdd(newMovie) {
     setMovies([...movies, newMovie]);
