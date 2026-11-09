@@ -1,20 +1,18 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import AddMovieForm from '../components/AddMovieForm';
 import FilterBar from '../components/FilterBar';
 import MovieList from '../components/MovieList';
-import MoviesContext from '../context/MoviesContext';
+import useMovies from '../hooks/useMovies';
 import './WatchlistPage.css';
 
 function WatchlistPage() {
-  const { movies, addMovie, toggleMovie, deleteMovie, resetMovies } = useContext(MoviesContext);
+  const { movies, watchedCount, addMovie, toggleMovie, deleteMovie, resetMovies } = useMovies();
   const [filter, setFilter] = useState('all');
 
   function handleReset() {
     resetMovies();
     setFilter('all');
   }
-
-  const watchedCount = movies.filter((m) => m.watched).length;
 
   // calculated, NOT stored in state
   const visibleMovies = movies.filter(
