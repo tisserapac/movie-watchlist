@@ -230,6 +230,12 @@ tasks, for the feature_addition and refactoring Cypher templates:
 - `tasks/verify.sh` checks all of this in a throwaway git worktree.
   `tasks/README.md` explains the folder.
 
+**Cross-platform setup (2026-11-11):** students use Windows, macOS and Linux. The
+app is not Dockerized: it runs natively with Node.js ≥ 22.22 (`engines` with
+`engine-strict`, `.nvmrc`), `.gitattributes` keeps LF everywhere, the README has a
+"check your setup" table to send before the session, and `.devcontainer/` gives a
+GitHub Codespaces fallback. Docker is used only for Memgraph + Lab (see Phase 5).
+
 ## Phase 4 — Check it against `codebase-kg`
 
 This phase touches your research repo, so I'll ask before doing it.
@@ -256,6 +262,8 @@ This phase touches your research repo, so I'll ask before doing it.
   flow into MovieCard, the hook/context chain, routes, and "who depends on
   MoviesContext".
 - Fallbacks: a pre-exported graph and cached LLM responses, in case of no network.
+- If students explore the graph themselves: a Compose file in this repo that starts
+  Memgraph + Lab and loads the CYPHERL export, so they need only Docker.
 - Reset step before each run: click "Reset to sample movies", so the app starts
   from the 8 sample movies.
 

@@ -6,16 +6,45 @@ project for the *Knowledge Graphs for React Code Generation* lecture demo.
 
 ## Quick start
 
-You need Node.js 22.22 or newer (the current LTS is fine) and npm.
+The app runs the same on Windows, macOS and Linux. You need **Node.js 22.22 or
+newer** (with npm, which comes with it) and **Git**.
 
-```bash
-git clone https://github.com/tisserapac/movie-watchlist.git
-cd movie-watchlist
-npm install
-npm run dev
-```
+1. **Install Node.js** if `node --version` shows nothing or a version below 22.22:
+   - Windows and macOS: the LTS installer from https://nodejs.org.
+   - Linux: your package manager may be too old; use https://nodejs.org or a
+     version manager such as [fnm](https://github.com/Schniz/fnm) or
+     [nvm](https://github.com/nvm-sh/nvm) (`.nvmrc` selects Node 24).
+2. **Clone, install and start** (in PowerShell, Terminal or any shell):
 
-Open http://localhost:5173. The app starts with 8 sample movies.
+   ```bash
+   git clone https://github.com/tisserapac/movie-watchlist.git
+   cd movie-watchlist
+   npm install
+   npm run dev
+   ```
+
+3. Open http://localhost:5173. The app starts with 8 sample movies.
+
+### Check your setup before the session
+
+Run these in the `movie-watchlist` folder. If all three work, you are ready.
+
+| Command | You should see |
+| --- | --- |
+| `node --version` | `v22.22.0` or higher |
+| `npm test` | `Tests  26 passed (26)` |
+| `npm run dev` | the app at http://localhost:5173 (stop it with Ctrl+C) |
+
+If `npm install` stops with `EBADENGINE`, your Node.js is too old: install a newer one (step 1).
+
+### No Node.js on your laptop? Use GitHub Codespaces
+
+On the repository's GitHub page, click **Code → Codespaces → Create codespace
+on main**. A VS Code window opens in the browser with Node.js installed and
+`npm install` already run (the setup is in `.devcontainer/`). Run `npm test` or
+`npm run dev` in its terminal; the app opens in a new browser tab. With Docker
+and VS Code installed, **Dev Containers: Reopen in Container** uses the same setup
+on your laptop.
 
 ## What it does
 
@@ -81,6 +110,7 @@ through functions (`onAdd`, `onToggle`, `onDelete`, `onFilterChange`).
 | --- | --- |
 | `lab-solution` | The lab, exactly as the React lecture slides 57–64 ask. State lives in `App`. |
 | `extended` | Same features, restructured with custom hooks, Context and React Router, plus a Stats page |
+| `demo` | `extended` + Vitest tests + the demo tasks in `tasks/` (the version we use in the lecture) |
 
 `git log --oneline` shows one commit per step. Use `git checkout <tag or commit>`
 to see the app at any point, and `git diff lab-solution extended -- src` to see

@@ -1,0 +1,12 @@
+// A ready-made environment for GitHub Codespaces (in the browser, nothing to
+// install) or VS Code Dev Containers (needs Docker). Not needed if Node.js
+// 22.22+ is installed on your laptop: see "Quick start" in README.md.
+{
+  "name": "movie-watchlist",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:24-bookworm",
+  "postCreateCommand": "npm install",
+  "forwardPorts": [5173],
+  "portsAttributes": {
+    "5173": { "label": "Vite dev server", "onAutoForward": "openBrowser" }
+  }
+}

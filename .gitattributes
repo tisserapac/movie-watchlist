@@ -1,0 +1,9 @@
+# Keep LF line endings in every checkout, including on Windows, so every
+# laptop has byte-for-byte the same files as the graph was extracted from,
+# and shell scripts (tasks/verify.sh) still run in Git Bash or WSL, where a
+# CRLF line ending makes bash fail.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary

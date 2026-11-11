@@ -10,7 +10,7 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 17b D1 dropped: bug fixed in `src/`, demo tasks are D2 and D3 only
+**Last completed:** 17c Cross-platform setup for Windows and macOS students (no Docker for the app)
 **Next:** 18 Extraction with `codebase-kg` (**ask before editing `codebase-kg`**)
 
 ---
@@ -43,11 +43,12 @@ follow its *Deliverables (git tags)*.
 - [x] 16 D2 feature_addition task: "Clear watched", YAML, test, reference patch
 - [x] 17 D3 refactoring task: `useMovieFilter`, YAML, test, reference patch
 - [x] 17b Drop D1 to fit the 1-hour session: bug fixed in `src/`, D1 test kept as `src/__tests__/deleteMovie.test.jsx`, D2/D3 rebased
+- [x] 17c Cross-platform setup: `engines` + `.npmrc` engine-strict, `.nvmrc`, `.gitattributes` (LF), README setup check, `.devcontainer/` for Codespaces
 - [ ] 18 Extraction with `codebase-kg` for `demo` and `lab-solution` (**ask before editing `codebase-kg`**)
 - [ ] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback)
 - [ ] 20 Retriever run on D2 and D3: anchors and context blocks checked
 - [ ] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
-- [ ] 22 Demo dry run; tag `demo`
+- [ ] 22 Demo dry run; tag `demo` (created early on `a1ca8d8`, 2026-11-09; move it to the final commit)
 
 ---
 
@@ -124,6 +125,17 @@ follow its *Deliverables (git tags)*.
   delete). D1's YAML and patch were removed, `verify.sh` no longer stacks D2/D3 on D1,
   and both YAMLs point `git_commit` at the D1 removal commit `bfb727d`. The bug_fix Cypher
   template is no longer exercised in the demo.
+- Students use Windows, macOS and Linux (2026-11-11, item 17c). The app is **not**
+  Dockerized: Node, Vite, Vitest and Oxlint already run on all three, the lockfile has the
+  native bindings for every platform, and Docker Desktop (WSL2 on Windows), bind-mount file
+  watching and per-OS `node_modules` would cost more setup time than they save. Instead:
+  `engines` `>=22.22` with `engine-strict` (old Node fails with `EBADENGINE`), `.nvmrc` (24),
+  `.gitattributes` `eol=lf`, a "check your setup" table in the README to send before the
+  session, and `.devcontainer/devcontainer.json` as the fallback (GitHub Codespaces in the
+  browser, or VS Code Dev Containers with Docker).
+- Docker is still the right tool for Memgraph + Lab (they only ship as images). If students
+  explore the graph on their own laptops, add a small Compose file here that starts both and
+  loads the CYPHERL export from item 19, so no Python, `codebase-kg` or LLM calls are needed.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 
@@ -168,6 +180,11 @@ follow its *Deliverables (git tags)*.
   one line); D3's is unchanged. In a scratch clone with the base committed, `verify.sh`
   gave 8/8 for D2 and D3, and again in this repo after the commits.
 - `develop` no longer carries a planted bug (17b), so it is safe to merge into `main`.
+- 17c verification: on a simulated Windows checkout (`core.autocrlf=true`, `core.eol=crlf`)
+  `.gitattributes` gives LF files and both patches apply. (Without it the files are CRLF, but
+  Git 2.43's `git apply` still converts, so patches were never the real risk.) With Node 20,
+  `npm install` stops with `EBADENGINE`. In the dev-container image (Node 24.22): install,
+  26/26 tests, lint 0, build OK, and the dev server serves the app.
 - Item 18: register the project with `exclude_paths = ["tasks"]` to be safe, although the
   extractor already skips everything in it.
 - Item 18: confirm that ROUTES_TO edges are extracted for `import { Route } from 'react-router'`.
