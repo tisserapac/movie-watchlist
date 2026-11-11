@@ -1,9 +1,13 @@
 # Movie Watchlist — development plan
 
 A sample React app for the live demo in *Knowledge Graphs for React Code Generation*
-(slides 28: Extract → Explore → Retrieve). It is the same app students build in the
+(slide 28: Extract → Explore → Retrieve). It is the same app students build in the
 45-minute lab of *React Basics* (slides 57–64), plus an extended version that
 exercises the parts of the KG schema the lab doesn't reach (slide 17).
+
+Students work hands-on in a second repo, [react-kg-lab](https://github.com/tisserapac/react-kg-lab),
+cloned next to this one. It reads this repo's `src/`, `knowledge_graph/`, `tasks/` and
+`compose.yaml`; students never clone `codebase-kg` (see Phase 5).
 
 ## Constraints
 
@@ -21,8 +25,9 @@ exercises the parts of the KG schema the lab doesn't reach (slide 17).
 - Must extract cleanly with `codebase-kg` as it is today. Checked against
   `src/extraction/programmatic.py` and `cross_file.py`:
   - `.js`/`.jsx` are included; `src/main.jsx` is a recognised root file.
-  - `vite.config.js`, `eslint.config.js`, `*.test.*`, `__tests__/`, `public/`
-    are excluded automatically, so tests and config add no noise.
+  - `vite.config.js`, `*.test.*`, `__tests__/`, `public/` are excluded
+    automatically, so tests and config add no noise. Linting is Oxlint, whose
+    `.oxlintrc.json` is not a JS file and is never read.
   - Avoid naming any source file `seed.*` (excluded pattern), so initial data
     lives in `src/data/initialMovies.js`.
 
@@ -35,7 +40,10 @@ React Router 8.5, Vitest 5.1.
 | --- | --- | --- |
 | `lab-solution` | The lab, done exactly as slides 57–64 ask | "This is the app you built" |
 | `extended` | Lab + custom hooks + context + routing | Feature-complete app |
-| `demo` | `extended` + Vitest tests + demo tasks D2 and D3 | The repo we extract live |
+| `demo` | `extended` + Vitest tests + demo tasks D2 and D3 + knowledge graphs + runbook | The repo we extract live |
+
+`demo` is set after the dry run, on `main`, in both this repo and `react-kg-lab`
+(a matching pair for the lecture).
 
 History on the way to `lab-solution` is one commit per lab task (Task 1 … Task 6),
 so students can step through it with `git log`.
@@ -245,29 +253,55 @@ This phase touches your research repo, so I'll ask before doing it.
    `[projects.movie-watchlist]` in `pipeline.toml` (`exclude_paths = ["tasks", "context"]`);
    no aliases or base_url are needed. Extract into the lecture's own Memgraph from
    `compose.yaml` (`PIPELINE_DB__URI=bolt://localhost:7688`), never the research instance.
-2. `make up` → `uv run pipeline extract` → `pipeline status`. Compare node and
-   edge counts with the inventory expected from Phases 1–2. Fix the app, not the
-   pipeline, where the app is unidiomatic.
+2. Start the lecture Memgraph (`docker compose up -d` here, on ports 7688 / 3001 while
+   the research one runs), then `PIPELINE_DB__URI=bolt://localhost:7688 uv run pipeline
+   extract --project movie-watchlist` and `pipeline status`. Not `make up`: that is the
+   research instance. Compare node and edge counts with the inventory expected from
+   Phases 1–2. Fix the app, not the pipeline, where the app is unidiomatic.
 3. Extract `lab-solution` as well, so the demo can show the small graph against the larger one.
 4. Export both graphs as CYPHERL into `knowledge_graph/` in this repo. That is
    the offline fallback: an import with no LLM calls (lecture slide 23).
 5. Run the retriever on D2 and D3. Check the classifier's anchors and that each
-   context block contains the files to edit. Optionally run one generation per
-   task and check the tests pass.
+   context block contains the files to edit. Keep the two context blocks in
+   `tasks/contexts/` as samples for students. (A generation run per task was
+   considered and is not needed: evaluation is left to the students.)
 
-## Phase 5 — Demo runbook
+## Phase 5 — Student lab, runbook and dry run
 
-`docs/demo-runbook.md` will cover:
+Students do not clone `codebase-kg`, whose research is still ongoing (advisor's advice).
+They get the idea and propose their own next steps:
 
-- Exact commands for Extract, Explore and Retrieve, with expected output and timings.
-- 5–6 prepared Memgraph Lab queries: the cover graph, the component tree, prop
-  flow into MovieCard, the hook/context chain, routes, and "who depends on
-  MoviesContext".
-- Fallbacks: a pre-exported graph and cached LLM responses, in case of no network.
-- If students explore the graph themselves: a Compose file in this repo that starts
-  Memgraph + Lab and loads the CYPHERL export, so they need only Docker.
-- Reset step before each run: click "Reset to sample movies", so the app starts
-  from the 8 sample movies.
+- **`react-kg-lab`** (separate repo, fresh Python code, no research code or prompts):
+  1. few-shot extraction of function components to JSON, with a simplified prompt of its
+     own (official `anthropic` / `openai` SDKs);
+  2. importing `knowledge_graph/movie-watchlist` or `lab-solution` into Memgraph, one at a time;
+  3. prepared Cypher queries to explore the graph;
+  4. for D2 and D3: what information each task needs, the queries that find it, and a
+     context block built from them.
+  Saving the JSON into the schema, choosing anchors and evaluation are open questions
+  in its `docs/ideas.md`. Its `WORKSHEET.md` repeats the demo step by step for students
+  who could not keep up.
+- **`compose.yaml`** here starts Memgraph + Lab for students, with the plain
+  `memgraph/memgraph` image (220 MB; MAGE is not used) and `knowledge_graph/` mounted.
+- **Setup guide** for students, sent by the advisor before the lecture:
+  `context/student-setup-guide.md` (git-ignored, not published).
+
+`docs/demo-runbook.md`, for the presenter, covers:
+
+- Checklists for a week before, the day before (rehearsal; stop the research Memgraph
+  so the lecture one uses the default ports) and fifteen minutes before.
+- A 60-minute timeline following slide 28, with the exact commands for Extract, Explore
+  and Retrieve, their expected output and timings.
+- The Memgraph Lab queries in running order: the cover graph, slide 24's
+  `CONSUMES_CONTEXT` query, the component tree, routes, the hook/context chain, prop flow
+  into MovieCard, "who depends on MoviesContext", and component interfaces.
+- Fallbacks: the graphs load from CYPHERL with no LLM calls, and the outputs of a
+  rehearsal are saved in `~/lecture-backup/output`, in case of no network.
+- Reset step: click "Reset to sample movies" in the app, so it shows the 8 sample movies.
+- A troubleshooting table and the setup message for students.
+
+The dry run follows the runbook on the lecture laptop, from fresh clones of both repos;
+then `demo` is tagged in both.
 
 ## Order of work and checkpoints
 
