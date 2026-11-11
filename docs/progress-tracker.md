@@ -10,8 +10,8 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 19 Both graphs exported as CYPHERL to `knowledge_graph/`
-**Next:** 20 Retriever run on D2 and D3 (use the lecture Memgraph on :7688, never the research one)
+**Last completed:** 20 Retriever run on D2 and D3 (Phase 4 of the plan is complete)
+**Next:** 21 `docs/demo-runbook.md`
 
 ---
 
@@ -46,7 +46,7 @@ follow its *Deliverables (git tags)*.
 - [x] 17c Cross-platform setup: `engines` + `.npmrc` engine-strict, `.nvmrc`, `.gitattributes` (LF), README setup check, `.devcontainer/` for Codespaces
 - [x] 18 Extraction with `codebase-kg` for `develop` (`movie-watchlist`) and `lab-solution`
 - [x] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback), plus `compose.yaml`
-- [ ] 20 Retriever run on D2 and D3: anchors and context blocks checked
+- [x] 20 Retriever run on D2 and D3: anchors and context blocks checked
 - [ ] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
 - [ ] 22 Demo dry run; tag `demo` (an early `demo` tag on `a1ca8d8` was deleted locally and on GitHub on 2026-11-11; create it on the final commit on `main`)
 
@@ -216,6 +216,27 @@ follow its *Deliverables (git tags)*.
   6 state variables (App: movies, filter; AddMovieForm: 4), no hooks, context or routes.
 - Cached re-extraction (unchanged files, `--reset`): 192 cache hits, 0 API calls, **3.8 s**,
   same 81 / 118. That is the live "Extract" step for the lecture, if the cache is warm.
+- Item 20: `codebase-kg`'s `KGAugmentedRetriever` (`claude_primary` + `kg_augmented`,
+  claude-sonnet-4-6, strict anchors), called directly from a scratch script against the lecture
+  Memgraph on :7688 with `movie-watchlist` loaded; no wipe or import. The pilot orchestrator was
+  not used: `ensure_project_kg_loaded` wipes whichever DB it is pointed at.
+  - D2: classified feature_addition, anchors MoviesProvider, useMovies, WatchlistPage (all three
+    expected; no route). Context: full source of MoviesProvider, WatchlistPage, useLocalStorage,
+    useMovies; AddMovieForm, FilterBar, MovieList as related; the routing table. Both files to
+    edit are included. 1.9 s, ~5.1k chars (~1.3k tokens; the retriever's word-based estimate
+    says 738).
+  - D3: classified refactoring, anchors WatchlistPage plus `useMovieFilter`, the hook the task
+    asks for, which does not exist yet and so matches nothing (harmless in strict mode).
+    Context: full source of WatchlistPage and useMovies, related components, "1 caller: App",
+    and the handleReset handler. The file to edit is included. 1.5 s, ~3.0k chars.
+  - `codebase-kg` finding (not fixed; reported): Memgraph's `collect(DISTINCT map)` does not
+    deduplicate maps that contain a null, so with `isRequired` null (JavaScript projects) a
+    neighbour's props repeat once per state variable ("Props: onAdd, onAdd, onAdd, onAdd").
+    The TypeScript pilot graphs also have some null `isRequired` props (react-shopping-cart 5 of 16),
+    but no logged pilot prompt shows a duplicate. Written up for later in
+    `codebase-kg/docs/phase_2/known-issue-duplicate-props-null-isrequired.md` (uncommitted there).
+  - The two rendered contexts are kept, unedited, in `tasks/contexts/` as samples for students,
+    with an explanation in `tasks/README.md`.
 - Item 19: `pipeline export` writes `full_dump.cypherl` + `manifest.json`. Loading
   `knowledge_graph/movie-watchlist/full_dump.cypherl` into an empty Memgraph takes 0.14 s and
   gives the same 81 / 118, with the helper `__mg_vertex__` labels removed. File paths in the
