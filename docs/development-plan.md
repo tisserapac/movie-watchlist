@@ -230,13 +230,21 @@ tasks, for the feature_addition and refactoring Cypher templates:
 - `tasks/verify.sh` checks all of this in a throwaway git worktree.
   `tasks/README.md` explains the folder.
 
+**Cross-platform setup (2026-11-11):** students use Windows, macOS and Linux. The
+app is not Dockerized: it runs natively with Node.js ≥ 22.22 (`engines` with
+`engine-strict`, `.nvmrc`), `.gitattributes` keeps LF everywhere, the README has a
+"check your setup" table to send before the session, and `.devcontainer/` gives a
+GitHub Codespaces fallback. Docker is used only for Memgraph + Lab (see Phase 5).
+
 ## Phase 4 — Check it against `codebase-kg`
 
 This phase touches your research repo, so I'll ask before doing it.
 
-1. Copy or symlink the `demo` checkout to
+1. Symlink this working copy to
    `~/Study/Implementation/sample-projects/small/movie-watchlist`. Register
-   `[projects.movie-watchlist]` in `pipeline.toml`; no aliases or base_url are needed.
+   `[projects.movie-watchlist]` in `pipeline.toml` (`exclude_paths = ["tasks", "context"]`);
+   no aliases or base_url are needed. Extract into the lecture's own Memgraph from
+   `compose.yaml` (`PIPELINE_DB__URI=bolt://localhost:7688`), never the research instance.
 2. `make up` → `uv run pipeline extract` → `pipeline status`. Compare node and
    edge counts with the inventory expected from Phases 1–2. Fix the app, not the
    pipeline, where the app is unidiomatic.
@@ -256,6 +264,8 @@ This phase touches your research repo, so I'll ask before doing it.
   flow into MovieCard, the hook/context chain, routes, and "who depends on
   MoviesContext".
 - Fallbacks: a pre-exported graph and cached LLM responses, in case of no network.
+- If students explore the graph themselves: a Compose file in this repo that starts
+  Memgraph + Lab and loads the CYPHERL export, so they need only Docker.
 - Reset step before each run: click "Reset to sample movies", so the app starts
   from the 8 sample movies.
 
