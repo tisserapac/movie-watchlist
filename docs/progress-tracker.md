@@ -174,6 +174,11 @@ follow its *Deliverables (git tags)*.
   troubleshooting table and the setup message for students. Open decision recorded in it:
   how students get an LLM API key for step 1. On the lecture laptop the research Memgraph is
   stopped (`docker compose down`, never `-v`) so the lecture one uses the default ports.
+- After the dry run (2026-11-12): the plan was brought in line with the later decisions
+  (react-kg-lab, worksheet, setup guide, plain Memgraph image, separate lecture Memgraph
+  instead of `make up`, Oxlint), and the runbook gained the app reset step, the cover graph
+  and the routes query. The optional generation run per task (Phase 4, step 5) is not
+  needed: evaluation is left to the students.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 

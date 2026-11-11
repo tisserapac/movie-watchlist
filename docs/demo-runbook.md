@@ -58,6 +58,9 @@ cd ~/Study/Implementation/codebase-kg && docker compose up -d
       (expect `Graph loaded: 81 nodes, 118 relationships.`).
 - [ ] Browser tabs: Memgraph Lab http://localhost:3000 (Connect), this runbook, the
       slides. Optional: the app (`npm run dev` in `movie-watchlist`, http://localhost:5173).
+- [ ] If the app tab is open: click **Reset to sample movies** at the bottom of the
+      watchlist, so it shows the 8 sample movies (`Total: 8 · Watched: 3 / 8`). Do the
+      same after any rehearsal that added, toggled or deleted movies.
 - [ ] In `movie-watchlist`: `git status` is clean (no leftover task test or patch).
 - [ ] Terminal: large font, `cd ~/Lecture/react-kg-lab`, wide window (paths are long).
 - [ ] Wi-Fi works: `uv run python 01_extract_components.py --file src/components/MovieCard.jsx` (~5 s).
@@ -132,25 +135,32 @@ uv run python 02_import_graph.py movie-watchlist --yes   # 81 nodes, 118 relatio
 *"What did the custom hooks, the Context and the router add?"* Then these queries in
 Lab, in this order (the numbers are from `queries/explore.cypher`; paste the block):
 
-1. **Slide 24's query**, as promised there:
+1. **The cover graph**: `MATCH (n) RETURN n;` The whole app as a graph, as on the
+   title slide. Compare it with the small graph you just showed.
+2. **Slide 24's query**, as promised there:
    `MATCH (h)-[:CONSUMES_CONTEXT]->(c:Context) RETURN h.name, c.name;`
    → `useMovies`, `MoviesContext`. The same pattern as the shopping cart: components
    reach the Context through a custom hook.
-2. **Query 3, component tree**: `main.jsx → App → pages → children`. Point out that the
+3. **Query 3, component tree**: `main.jsx → App → pages → children`. Point out that the
    route pages are children of `App` too.
-3. **Query 9, context chain**: `WatchlistPage → useMovies → MoviesContext ← MoviesProvider`
+4. **Query 4, routes** (table): `/` → `WatchlistPage`, `/stats` → `StatsPage`,
+   `*` → `NotFoundPage`, all from `App`. React Router's `<Route>` elements became
+   `ROUTES_TO` relationships with the path on them.
+5. **Query 9, context chain**: `WatchlistPage → useMovies → MoviesContext ← MoviesProvider`
    (and the same for `StatsPage`). This is the path D2 needs.
-4. **Query 5, prop flow**: `WatchlistPage → MovieList → MovieCard`, carrying `onDelete`.
+6. **Query 5, prop flow**: `WatchlistPage → MovieList → MovieCard`, carrying `onDelete`.
    Each `PASSES_PROP` edge holds one prop name.
-5. **Query 12, impact**: who breaks if `MoviesContext` changes? `useMovies`, used by both pages.
-6. **Query 6, interfaces** (table): `MovieCard` has 6 props. Ask: *step 1 said
+7. **Query 12, impact**: who breaks if `MoviesContext` changes? `useMovies`, used by both pages.
+8. **Query 6, interfaces** (table): `MovieCard` has 6 props. Ask: *step 1 said
    `MoviesProvider` has a `children` prop; does the graph?* (It does not: a prompt
    design difference, and a discussion about measuring extraction quality.)
+
+If time is short, skip 4 and 8; they are tables, not pictures.
 
 Students: `uv run python 03_explore_graph.py`, then write one query of their own.
 
 > **Fallback (Lab will not load):** run the same queries in the terminal:
-> `uv run python 03_explore_graph.py 3 9 5 12 6`.
+> `uv run python 03_explore_graph.py 3 4 9 5 12 6`.
 
 ### 4.3 Retrieve (40–55 min)
 
@@ -182,7 +192,9 @@ source of `WatchlistPage`, `MoviesProvider` and `useMovies`. Talking points:
 > npx vitest run src/__tests__/D2_clear_watched.test.jsx    # passes
 > git checkout -- src && rm src/__tests__/D2_clear_watched.test.jsx   # undo: do not skip
 > ```
-> With `npm run dev` running, the button appears at http://localhost:5173 after the patch.
+> With `npm run dev` running, the button appears at http://localhost:5173 after the patch
+> (show it before the undo line). If you click it, the watched movies are gone from the
+> saved list: click **Reset to sample movies** afterwards.
 
 Students do **D3** on their own: read `tasks/D3.md`, run
 `uv run python 04_task_context.py D3`, and compare with the research block. Ask them:
