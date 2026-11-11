@@ -10,8 +10,8 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 21 `docs/demo-runbook.md`
-**Next:** 22 Demo dry run on the lecture laptop (runbook section 2); then tag `demo` in both repos
+**Last completed:** 22 Demo dry run; tag `demo` in both repos (all items complete)
+**Next:** the lecture, following `docs/demo-runbook.md` (stop the research Memgraph the day before, restart it after)
 
 ---
 
@@ -48,7 +48,7 @@ follow its *Deliverables (git tags)*.
 - [x] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback), plus `compose.yaml`
 - [x] 20 Retriever run on D2 and D3: anchors and context blocks checked
 - [x] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
-- [ ] 22 Demo dry run; tag `demo` (an early `demo` tag on `a1ca8d8` was deleted locally and on GitHub on 2026-11-11; create it on the final commit on `main`)
+- [x] 22 Demo dry run; tag `demo` on `main` in both repos (`d837f85` here, `4363313` in react-kg-lab)
 
 ---
 
@@ -223,6 +223,18 @@ follow its *Deliverables (git tags)*.
   Git 2.43's `git apply` still converts, so patches were never the real risk.) With Node 20,
   `npm install` stops with `EBADENGINE`. In the dev-container image (Node 24.22): install,
   26/26 tests, lint 0, build OK, and the dev server serves the app.
+- Item 22 dry run (2026-11-12, this laptop, following the runbook): research Memgraph stopped
+  (takenote 398 nodes / 635 relationships before, identical after restart); student setup guide
+  from fresh GitHub clones (`movie-watchlist` main `d837f85`, `react-kg-lab` main `4363313`):
+  26/26 tests, `docker compose pull` + `up` on the default ports with the plain Memgraph image,
+  Lab at :3000, `uv sync`. Session: `--show-prompt` 0.2 s; step 1, 17 files, 9.3 s (few-shot) and
+  10.7 s (zero-shot), 11 components both; imports 0.4–0.7 s (51/71 and 81/118); slide 24's query
+  returns useMovies → MoviesContext; explore queries 3 9 5 12 6 without errors; D2/D3 blocks
+  0.4 s each (~1,380 / ~1,080 tokens). Optional segments: close-the-loop (test fails, patch,
+  3/3 pass, undo leaves the tree clean) and the cached research extraction on :7687, 4.3 s,
+  0 API calls, 192 cache hits. Fallback outputs saved in `~/lecture-backup/output`. Afterwards
+  the research Memgraph was restarted (its `docker compose up` also starts its Lab on :3000)
+  and the lecture one returned to :7688 / :3001.
 - Item 18 results, `movie-watchlist` (develop at `c35828c`): 17 files, 192 LLM calls, 69.5 min
   (the 20 s `call_delay`), 0 failed. 81 nodes / 118 relationships: File 17, Prop 15, Library 14,
   Function_Component 11, EventHandler 10, State_Variable 7, Library_Hook 3, Custom_Hook 2,
