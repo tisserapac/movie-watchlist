@@ -10,8 +10,8 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 17c Cross-platform setup for Windows and macOS students (no Docker for the app)
-**Next:** 18 Extraction with `codebase-kg` (**ask before editing `codebase-kg`**)
+**Last completed:** 19 Both graphs exported as CYPHERL to `knowledge_graph/`
+**Next:** 20 Retriever run on D2 and D3 (use the lecture Memgraph on :7688, never the research one)
 
 ---
 
@@ -44,11 +44,11 @@ follow its *Deliverables (git tags)*.
 - [x] 17 D3 refactoring task: `useMovieFilter`, YAML, test, reference patch
 - [x] 17b Drop D1 to fit the 1-hour session: bug fixed in `src/`, D1 test kept as `src/__tests__/deleteMovie.test.jsx`, D2/D3 rebased
 - [x] 17c Cross-platform setup: `engines` + `.npmrc` engine-strict, `.nvmrc`, `.gitattributes` (LF), README setup check, `.devcontainer/` for Codespaces
-- [ ] 18 Extraction with `codebase-kg` for `demo` and `lab-solution` (**ask before editing `codebase-kg`**)
-- [ ] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback)
+- [x] 18 Extraction with `codebase-kg` for `develop` (`movie-watchlist`) and `lab-solution`
+- [x] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback), plus `compose.yaml`
 - [ ] 20 Retriever run on D2 and D3: anchors and context blocks checked
 - [ ] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
-- [ ] 22 Demo dry run; tag `demo` (created early on `a1ca8d8`, 2026-11-09; move it to the final commit)
+- [ ] 22 Demo dry run; tag `demo` (an early `demo` tag on `a1ca8d8` was deleted locally and on GitHub on 2026-11-11; create it on the final commit on `main`)
 
 ---
 
@@ -136,6 +136,23 @@ follow its *Deliverables (git tags)*.
 - Docker is still the right tool for Memgraph + Lab (they only ship as images). If students
   explore the graph on their own laptops, add a small Compose file here that starts both and
   loads the CYPHERL export from item 19, so no Python, `codebase-kg` or LLM calls are needed.
+- The lecture graph lives in its **own Memgraph** (`compose.yaml`, project name
+  `movie-watchlist-kg`), not in `codebase-kg`'s instance, which holds research data
+  (takenote) and would be mixed with or changed by a second project (Stage 4 sets
+  `isRoot = false` on every other project's components). On this machine it runs on
+  Bolt 7688 / Lab 3001 (`MEMGRAPH_PORT=7688 MEMGRAPH_LOG_PORT=7445 LAB_PORT=3001`);
+  students get the defaults 7687 / 3000. The same file is the students' way to explore
+  the graph: it mounts `knowledge_graph/` read-only at `/knowledge_graph`.
+- `codebase-kg` changes (item 18): only a `[projects.movie-watchlist]` entry in
+  `pipeline.toml`, plus a symlink `sample-projects/small/movie-watchlist` → this repo and
+  a clone `sample-projects/small/movie-watchlist-lab-solution` at the `lab-solution` tag
+  (extracted with `--repo`, no TOML entry). Run output lands in
+  `codebase-kg/graph_export/movie-watchlist/`, as for the other projects (not committed).
+- `projectId` is a hash of the repo's absolute path (`3664369658ac` here), so it differs on
+  every machine. Queries and the runbook select the project by name: `{name:'movie-watchlist'}`.
+  Both graphs have that name (from `package.json`), so load one at a time.
+- `lab-solution` was extracted with `PIPELINE_LLM__CALL_DELAY=2` (env only; `pipeline.toml`
+  keeps 20 s). No rate-limit errors.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 
@@ -185,6 +202,22 @@ follow its *Deliverables (git tags)*.
   Git 2.43's `git apply` still converts, so patches were never the real risk.) With Node 20,
   `npm install` stops with `EBADENGINE`. In the dev-container image (Node 24.22): install,
   26/26 tests, lint 0, build OK, and the dev server serves the app.
-- Item 18: register the project with `exclude_paths = ["tasks"]` to be safe, although the
-  extractor already skips everything in it.
-- Item 18: confirm that ROUTES_TO edges are extracted for `import { Route } from 'react-router'`.
+- Item 18 results, `movie-watchlist` (develop at `c35828c`): 17 files, 192 LLM calls, 69.5 min
+  (the 20 s `call_delay`), 0 failed. 81 nodes / 118 relationships: File 17, Prop 15, Library 14,
+  Function_Component 11, EventHandler 10, State_Variable 7, Library_Hook 3, Custom_Hook 2,
+  Context 1; ROUTES_TO 3 (`/`, `/stats`, `*`, so React Router 8 works and no fallback is needed),
+  USES_COMPONENT 10, USES_CUSTOM_HOOK 3, PROVIDES_CONTEXT 1 (valueExpression lists the five
+  actions), CONSUMES_CONTEXT 1 (useMovies), RENDERS_ROOT_COMPONENT 1. Matches the inventory
+  from the source except two reasonable extras: `movies` (from `useLocalStorage`) counted as
+  state of MoviesProvider, and the three route pages also as USES_COMPONENT children of App
+  (`usage: prop_value`), so D3's refactoring query finds App as WatchlistPage's caller.
+  The D2 chain WatchlistPage → useMovies → MoviesContext ← MoviesProvider is present.
+- Item 18 results, `lab-solution` (7 files): 24 LLM calls, 97 s, 0 failed. 5 components,
+  6 state variables (App: movies, filter; AddMovieForm: 4), no hooks, context or routes.
+- Cached re-extraction (unchanged files, `--reset`): 192 cache hits, 0 API calls, **3.8 s**,
+  same 81 / 118. That is the live "Extract" step for the lecture, if the cache is warm.
+- Item 19: `pipeline export` writes `full_dump.cypherl` + `manifest.json`. Loading
+  `knowledge_graph/movie-watchlist/full_dump.cypherl` into an empty Memgraph takes 0.14 s and
+  gives the same 81 / 118, with the helper `__mg_vertex__` labels removed. File paths in the
+  graph are repo-relative. `Project.file_path` was replaced with `.` in both exports (it held
+  this laptop's absolute path; nothing reads it back, and `projectId` is unchanged).

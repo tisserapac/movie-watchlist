@@ -57,6 +57,23 @@ on your laptop.
 
 There is no backend or database: all data lives in the browser.
 
+## Explore the knowledge graph (optional, needs Docker)
+
+`knowledge_graph/` holds this app's knowledge graph, extracted with
+the `codebase-kg` pipeline for the lecture *Knowledge Graphs
+for React Code Generation*: `movie-watchlist/` is this version, `lab-solution/`
+the smaller lab version. To explore it in Memgraph Lab:
+
+```bash
+docker compose up -d
+docker compose exec memgraph bash -c "mgconsole < /knowledge_graph/movie-watchlist/full_dump.cypherl"
+```
+
+Open http://localhost:3000, click **Connect**, and run for example
+`MATCH p=(:Function_Component {name:'App'})-[:USES_COMPONENT|ROUTES_TO]->() RETURN p`.
+`docker compose down` stops it. If port 7687 or 3000 is taken, see the comment
+at the top of `compose.yaml`.
+
 ## Project structure
 
 ```
@@ -86,6 +103,8 @@ src/
 │   └── genres.js               # Action, Comedy, Drama, Sci-Fi, Horror
 └── __tests__/                  # Vitest + React Testing Library tests
 tasks/                          # demo tasks D2 and D3: specs, tests, reference patches
+knowledge_graph/                # the app's knowledge graph as CYPHERL (loads into Memgraph)
+compose.yaml                    # Memgraph + Memgraph Lab, for exploring the graph
 ```
 
 The movie list lives in `MoviesProvider` and is shared through React Context.

@@ -1,0 +1,43 @@
+# Memgraph (graph database) + Memgraph Lab (web UI) for exploring this app's
+# knowledge graph. Needs Docker; the app itself does not.
+#
+#   docker compose up -d      # then open http://localhost:3000 and click Connect
+#   docker compose down       # stop (the graph is kept in a Docker volume)
+#
+# The exported graph in knowledge_graph/ is mounted at /knowledge_graph inside
+# the container; docs/demo-runbook.md shows how to load it.
+#
+# Ports can be changed if 7687 or 3000 are already in use, for example:
+#   MEMGRAPH_PORT=7688 LAB_PORT=3001 docker compose up -d
+name: movie-watchlist-kg
+
+services:
+  memgraph:
+    image: memgraph/memgraph-mage:3.8.1
+    ports:
+      - "${MEMGRAPH_PORT:-7687}:7687"   # Bolt protocol (Lab, drivers)
+      - "${MEMGRAPH_LOG_PORT:-7444}:7444" # log streaming for Lab
+    volumes:
+      - mg_data:/var/lib/memgraph
+      - ./knowledge_graph:/knowledge_graph:ro
+    command: ["--log-level=WARNING", "--storage-snapshot-on-exit=true",
+              "--also-log-to-stderr=true"]
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'RETURN 0;' | mgconsole || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  lab:
+    image: memgraph/lab:3.8.0
+    ports:
+      - "${LAB_PORT:-3000}:3000"
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
+    depends_on:
+      memgraph:
+        condition: service_healthy
+
+volumes:
+  mg_data:

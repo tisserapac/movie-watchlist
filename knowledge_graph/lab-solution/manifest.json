@@ -1,0 +1,26 @@
+{
+  "format": "cypherl",
+  "nodes": {
+    "Prop": 13,
+    "EventHandler": 10,
+    "Library": 7,
+    "File": 7,
+    "State_Variable": 6,
+    "Function_Component": 5,
+    "Library_Hook": 2,
+    "Project": 1
+  },
+  "relationships": {
+    "ACCEPTS_PROP": 13,
+    "PASSES_PROP": 13,
+    "HAS_HANDLER": 10,
+    "BELONGS_TO": 7,
+    "DEPENDS_ON": 7,
+    "DECLARES_STATE": 6,
+    "DEFINED_IN": 5,
+    "USES_COMPONENT": 4,
+    "USES_LIBRARY_HOOK": 3,
+    "PROVIDED_BY": 2,
+    "RENDERS_ROOT_COMPONENT": 1
+  }
+}

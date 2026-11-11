@@ -240,9 +240,11 @@ GitHub Codespaces fallback. Docker is used only for Memgraph + Lab (see Phase 5)
 
 This phase touches your research repo, so I'll ask before doing it.
 
-1. Copy or symlink the `demo` checkout to
+1. Symlink this working copy to
    `~/Study/Implementation/sample-projects/small/movie-watchlist`. Register
-   `[projects.movie-watchlist]` in `pipeline.toml`; no aliases or base_url are needed.
+   `[projects.movie-watchlist]` in `pipeline.toml` (`exclude_paths = ["tasks", "context"]`);
+   no aliases or base_url are needed. Extract into the lecture's own Memgraph from
+   `compose.yaml` (`PIPELINE_DB__URI=bolt://localhost:7688`), never the research instance.
 2. `make up` → `uv run pipeline extract` → `pipeline status`. Compare node and
    edge counts with the inventory expected from Phases 1–2. Fix the app, not the
    pipeline, where the app is unidiomatic.
