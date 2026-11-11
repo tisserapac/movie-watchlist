@@ -11,7 +11,7 @@ follow its *Deliverables (git tags)*.
 
 **Stage:** Stage 3 — `demo`
 **Last completed:** 20 Retriever run on D2 and D3 (Phase 4 of the plan is complete)
-**Next:** 21 `docs/demo-runbook.md`
+**Next:** 21 `docs/demo-runbook.md` (built around the four steps of `react-kg-lab`)
 
 ---
 
@@ -153,6 +153,16 @@ follow its *Deliverables (git tags)*.
   Both graphs have that name (from `package.json`), so load one at a time.
 - `lab-solution` was extracted with `PIPELINE_LLM__CALL_DELAY=2` (env only; `pipeline.toml`
   keeps 20 s). No rate-limit errors.
+- Students do not clone `codebase-kg` (2026-11-12, advisor's advice: the research is ongoing).
+  Instead a separate repo, `react-kg-lab` (`~/Lecture/react-kg-lab`, cloned next to this one),
+  holds only fresh Python code for four steps: (1) few-shot extraction of function components
+  to JSON (own simplified prompt, official `anthropic` / `openai` SDKs, default
+  `claude-opus-5-5`); (2) importing `knowledge_graph/*` into Memgraph one graph at a time;
+  (3) 13 exploration queries; (4) D2/D3: what information each task needs, its Cypher
+  queries, and a context block built from them. Saving the JSON into the schema, anchor
+  classification and evaluation are left to the students (`react-kg-lab/docs/ideas.md`).
+  `react-kg-lab` reads this repo's `src/`, `knowledge_graph/` and `tasks/`, and uses this
+  repo's `compose.yaml` for Memgraph, so those must be on `main` before the lecture.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 
