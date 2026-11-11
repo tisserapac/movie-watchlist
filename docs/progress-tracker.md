@@ -10,8 +10,8 @@ follow its *Deliverables (git tags)*.
 ## Current Status
 
 **Stage:** Stage 3 — `demo`
-**Last completed:** 20 Retriever run on D2 and D3 (Phase 4 of the plan is complete)
-**Next:** 21 `docs/demo-runbook.md` (built around the four steps of `react-kg-lab`)
+**Last completed:** 21 `docs/demo-runbook.md`
+**Next:** 22 Demo dry run on the lecture laptop (runbook section 2); then tag `demo` in both repos
 
 ---
 
@@ -47,7 +47,7 @@ follow its *Deliverables (git tags)*.
 - [x] 18 Extraction with `codebase-kg` for `develop` (`movie-watchlist`) and `lab-solution`
 - [x] 19 Export both graphs as CYPHERL to `knowledge_graph/` (offline fallback), plus `compose.yaml`
 - [x] 20 Retriever run on D2 and D3: anchors and context blocks checked
-- [ ] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
+- [x] 21 `docs/demo-runbook.md`: commands, Memgraph Lab queries, fallbacks, reset step
 - [ ] 22 Demo dry run; tag `demo` (an early `demo` tag on `a1ca8d8` was deleted locally and on GitHub on 2026-11-11; create it on the final commit on `main`)
 
 ---
@@ -163,6 +163,17 @@ follow its *Deliverables (git tags)*.
   classification and evaluation are left to the students (`react-kg-lab/docs/ideas.md`).
   `react-kg-lab` reads this repo's `src/`, `knowledge_graph/` and `tasks/`, and uses this
   repo's `compose.yaml` for Memgraph, so those must be on `main` before the lecture.
+- `compose.yaml` uses the plain `memgraph/memgraph:3.8.1` image, not `memgraph-mage`
+  (2026-11-12): a 220 MB download instead of 2.3 GB per student, and nothing in the lab uses
+  MAGE's algorithms. Both images exist for amd64 and arm64 (Apple Silicon). The README's
+  `mgconsole` load command now empties Memgraph first, so loading twice no longer fails on
+  the Project uniqueness constraint.
+- Runbook (item 21) is for the presenter: before / day before / 15 minutes before checklists,
+  a 60-minute timeline following slide 28 (Extract → Explore → Retrieve), the Lab queries in
+  order (starting with slide 24's CONSUMES_CONTEXT query, promised there), fallbacks, a
+  troubleshooting table and the setup message for students. Open decision recorded in it:
+  how students get an LLM API key for step 1. On the lecture laptop the research Memgraph is
+  stopped (`docker compose down`, never `-v`) so the lecture one uses the default ports.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 

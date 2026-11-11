@@ -66,8 +66,13 @@ the smaller lab version. To explore it in Memgraph Lab:
 
 ```bash
 docker compose up -d
-docker compose exec memgraph bash -c "mgconsole < /knowledge_graph/movie-watchlist/full_dump.cypherl"
+docker compose exec memgraph bash -c "echo 'MATCH (n) DETACH DELETE n;' | mgconsole && mgconsole < /knowledge_graph/movie-watchlist/full_dump.cypherl"
 ```
+
+The second command first empties Memgraph, so only one graph is loaded at a time
+(use `lab-solution` instead of `movie-watchlist` for the other one). The lecture's
+hands-on lab, [react-kg-lab](https://github.com/tisserapac/react-kg-lab), does the
+same with `02_import_graph.py` and adds prepared queries.
 
 Open http://localhost:3000, click **Connect**, and run for example
 `MATCH p=(:Function_Component {name:'App'})-[:USES_COMPONENT|ROUTES_TO]->() RETURN p`.

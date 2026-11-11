@@ -13,7 +13,7 @@ name: movie-watchlist-kg
 
 services:
   memgraph:
-    image: memgraph/memgraph-mage:3.8.1
+    image: memgraph/memgraph:3.8.1
     ports:
       - "${MEMGRAPH_PORT:-7687}:7687"   # Bolt protocol (Lab, drivers)
       - "${MEMGRAPH_LOG_PORT:-7444}:7444" # log streaming for Lab
