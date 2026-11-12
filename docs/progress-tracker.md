@@ -179,6 +179,12 @@ follow its *Deliverables (git tags)*.
   instead of `make up`, Oxlint), and the runbook gained the app reset step, the cover graph
   and the routes query. The optional generation run per task (Phase 4, step 5) is not
   needed: evaluation is left to the students.
+- `react-kg-lab`'s default model is `claude-sonnet-5-5` (2026-11-13), not `claude-opus-5-5`:
+  half the price, a little faster, and identical JSON on the app's 17 files (Sonnet 5.5 7.9 s,
+  Sonnet 5 7.6 s, Opus 5.5 9.4 s). Sonnet 4.6, the research pipeline's model, also worked but
+  listed `useState` four times for AddMovieForm (once per call). `.env.example` lists
+  `claude-sonnet-5`, `claude-opus-5-5` and, for OpenAI, `gpt-5.4-mini` (from the SDK's model
+  list; not tried) as alternatives.
 - Stats cards: Movies · Watched · To watch · Progress (%). The percentage card is labelled
   "Progress" so there aren't two "Watched" labels.
 
