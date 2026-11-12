@@ -39,7 +39,7 @@ offline fallback:
 
 ```bash
 cd ~/Lecture/react-kg-lab
-uv run python 01_extract_components.py            # ~10 s, needs network + key
+uv run python 01_extract_components.py            # ~8 s, needs network + key
 uv run python 04_task_context.py D2 && uv run python 04_task_context.py D3
 mkdir -p ~/lecture-backup && cp -r output ~/lecture-backup/
 ```
@@ -95,7 +95,8 @@ Talking points, scrolling through the printed prompt:
 uv run python 01_extract_components.py
 ```
 
-~10 s for 17 files. Expect **11 components**, 0 errors. Point at:
+~8 s for 17 files with the default model, `claude-sonnet-5-5`. Expect **11 components**,
+0 errors. Point at:
 
 - `MoviesProvider` → props `children`, hooks `useLocalStorage` (`../hooks/useLocalStorage`).
 - `WatchlistPage` → hooks `useMovies`, `useState`, no props.
@@ -125,7 +126,7 @@ Small graph first, then the full one:
 uv run python 02_import_graph.py lab-solution --yes      # 51 nodes, 71 relationships
 ```
 
-In Lab, run `MATCH (n) RETURN n` and show the whole thing: five components, all state
+In Lab, run `MATCH (n)-[r]->(m) RETURN n, r, m;` and show the whole thing: five components, all state
 in `App` and `AddMovieForm`, no hooks, no Context, no routes.
 
 ```bash
@@ -135,7 +136,7 @@ uv run python 02_import_graph.py movie-watchlist --yes   # 81 nodes, 118 relatio
 *"What did the custom hooks, the Context and the router add?"* Then these queries in
 Lab, in this order (the numbers are from `queries/explore.cypher`; paste the block):
 
-1. **The cover graph**: `MATCH (n) RETURN n;` The whole app as a graph, as on the
+1. **The cover graph**: `MATCH (n)-[r]->(m) RETURN n, r, m;` The whole app as a graph, as on the
    title slide. Compare it with the small graph you just showed.
 2. **Slide 24's query**, as promised there:
    `MATCH (h)-[:CONSUMES_CONTEXT]->(c:Context) RETURN h.name, c.name;`
@@ -230,7 +231,7 @@ anchors, measuring whether the context helps) is theirs.
 | App source files read by the extractor | 17 |
 | Full graph (`movie-watchlist`) | 81 nodes, 118 relationships; 11 components, 2 custom hooks, 1 Context, 3 routes |
 | Lab graph (`lab-solution`) | 51 nodes, 71 relationships; 5 components |
-| Lab step 1 (17 files, `claude-opus-5-5`) | ~10 s, 11 components |
+| Lab step 1 (17 files, `claude-sonnet-5-5`, the default) | ~8 s, 11 components; same JSON with `claude-sonnet-5` and `claude-opus-5-5` |
 | Research extraction | 192 LLM calls; ~70 min uncached (20 s delay between calls), ~4 s cached |
 | Graph import from CYPHERL | 0.1–0.2 s |
 | D2 / D3 context block (lab) | ~1,400 / ~1,100 tokens |
